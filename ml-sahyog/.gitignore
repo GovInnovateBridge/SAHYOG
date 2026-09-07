@@ -1,0 +1,11 @@
+*.html
+.env
+__pycache__/
+*.pyc
+venv/
+.venv/
+Backend_Data.zip
+Backend_Data_Extracted/
+backend_integration_guide*
+list_models.py
+test_*.py

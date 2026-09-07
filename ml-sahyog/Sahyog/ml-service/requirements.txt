@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+langchain
+langchain-core
+langchain-google-genai
+pydantic
+python-dotenv
+sentence-transformers
+scikit-learn
