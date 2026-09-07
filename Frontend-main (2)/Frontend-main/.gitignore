@@ -1,0 +1,36 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Project documentation (not for repo)
+Backend_Architecture*.html
+Sahyog_Frontend_Detailed_PPT*.html
+Sahyog_ML_Detailed_PPT*.html
+sih_presentation*.html
+GovInnovate_Bridge_7Day_Workflow*.pdf
+Backend_Data.zip 
+Backend-main.zip
+ml-sahyog.zip
+backend-extracted/
+ml-sahyog-extracted/
