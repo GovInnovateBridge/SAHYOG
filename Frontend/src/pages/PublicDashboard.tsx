@@ -284,135 +284,44 @@ export default function PublicDashboard() {
         </div>
       </nav>
 
-      {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
+      
+      {/* SECTION 1: HERO */}
       <section
         ref={heroRef}
-        className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 overflow-hidden"
+        className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 overflow-hidden bg-[url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed"
       >
-        {/* Animated parallax background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Grid pattern */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.03]">
+        {/* Overlay to ensure text readability while preserving the background's beauty */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/40 to-[#138808]/20 backdrop-blur-[2px]"></div>
+
+        {/* Beautiful wavy bottom divider to transition into the next section */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20">
+          <svg className="relative block w-full h-[50px] md:h-[80px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,130.42,122.9,190.5,109.52Z" fill="url(#hero-gradient)"></path>
             <defs>
-              <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#003366" strokeWidth="0.5" />
-              </pattern>
+              <linearGradient id="hero-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#138808" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="100%" stopColor="#FF9933" stopOpacity="0.8" />
+              </linearGradient>
             </defs>
-            <rect width="100%" height="100%" fill="url(#heroGrid)" />
           </svg>
-
-          {/* Slow-moving parallax layer 1 (far back) */}
-          <ParallaxLayer speed={-0.15}>
-            <FloatingShape
-              className="top-[8%] right-[12%] w-64 h-64 rounded-full border-2 border-[#FF9933]/[0.08]"
-              duration={25}
-              xRange={40}
-              yRange={30}
-            />
-            <FloatingShape
-              className="bottom-[15%] left-[8%] w-48 h-48 rounded-full bg-[#003366]/[0.03] blur-2xl"
-              duration={30}
-              delay={2}
-              xRange={50}
-              yRange={35}
-            />
-            <FloatingShape
-              className="top-[35%] left-[60%] w-20 h-20 rounded-lg border border-[#138808]/[0.1] rotate-12"
-              duration={18}
-              delay={5}
-              xRange={25}
-              yRange={20}
-            />
-          </ParallaxLayer>
-
-          {/* Parallax layer 2 (mid) */}
-          <ParallaxLayer speed={-0.08}>
-            <FloatingShape
-              className="top-[20%] left-[15%] w-32 h-32 rounded-full border border-[#003366]/[0.06]"
-              duration={22}
-              delay={1}
-              xRange={35}
-              yRange={28}
-            />
-            <FloatingShape
-              className="bottom-[25%] right-[18%] w-24 h-24 rounded-xl bg-[#FF9933]/[0.03] blur-xl"
-              duration={20}
-              delay={3}
-              xRange={30}
-              yRange={22}
-            />
-            <FloatingShape
-              className="top-[55%] left-[40%] w-16 h-16 rounded-full border border-[#FF9933]/[0.08]"
-              duration={16}
-              delay={4}
-              xRange={20}
-              yRange={15}
-            />
-          </ParallaxLayer>
-
-          {/* Parallax layer 3 (foreground accents) */}
-          <ParallaxLayer speed={-0.03}>
-            <FloatingShape
-              className="top-[12%] left-[45%] w-3 h-3 rounded-full bg-[#FF9933]/[0.2]"
-              duration={12}
-              xRange={15}
-              yRange={12}
-            />
-            <FloatingShape
-              className="top-[30%] right-[25%] w-2 h-2 rounded-full bg-[#003366]/[0.2]"
-              duration={14}
-              delay={2}
-              xRange={12}
-              yRange={10}
-            />
-            <FloatingShape
-              className="bottom-[30%] left-[25%] w-2.5 h-2.5 rounded-full bg-[#138808]/[0.2]"
-              duration={10}
-              delay={1}
-              xRange={18}
-              yRange={14}
-            />
-            <FloatingShape
-              className="top-[65%] right-[35%] w-2 h-2 rounded-full bg-[#FF9933]/[0.15]"
-              duration={15}
-              delay={6}
-              xRange={10}
-              yRange={8}
-            />
-          </ParallaxLayer>
-
-          {/* Soft gradient glows */}
-          <motion.div
-            className="absolute top-[10%] right-[5%] w-[500px] h-[500px] rounded-full bg-[#FF9933]/[0.04] blur-3xl"
-            animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.06, 0.04] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute bottom-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-[#003366]/[0.04] blur-3xl"
-            animate={{ scale: [1, 1.1, 1], opacity: [0.04, 0.07, 0.04] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-          />
-          <motion.div
-            className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#138808]/[0.03] blur-3xl"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.05, 0.03] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
-          />
+          <div className="h-4 bg-white w-full -mt-1"></div>
         </div>
 
         <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
-          className="text-center max-w-5xl mx-auto relative z-10"
+          className="relative z-10 w-full max-w-5xl mx-auto text-center flex flex-col items-center mt-8"
         >
-          {/* Badge */}
+          {/* Pill label */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-[#003366]/15 bg-[#003366]/[0.04]"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+            className="inline-flex items-center gap-2 px-6 py-2.5 mb-8 rounded-full bg-white/80 backdrop-blur-md shadow-sm border border-white/50"
           >
-            <Sparkles size={14} className="text-[#FF9933]" />
-            <span className="text-xs font-bold tracking-wider uppercase text-[#003366]">
-              Empowering Digital India · Smart Innovation Platform
+            <Sparkles size={14} className="text-[#003366]" />
+            <span className="text-[11px] font-bold tracking-widest uppercase text-[#003366]">
+              Empowering Digital India - Smart Innovation Platform
             </span>
           </motion.div>
 
@@ -423,24 +332,12 @@ export default function PublicDashboard() {
             transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{ perspective: 1200 }}
           >
-            <div className="flex justify-center mb-4">
-              <GovtEmblem width={56} height={70} />
+            <div className="flex justify-center mb-4 drop-shadow-xl">
+              <GovtEmblem width={64} height={80} />
             </div>
-            <h1 className="text-7xl md:text-8xl font-black tracking-tighter text-[#003366] leading-[0.9]">
+            <h1 className="text-7xl md:text-[6.5rem] font-black tracking-tighter text-[#003366] leading-[0.9] drop-shadow-lg">
               SAHYOG
             </h1>
-          </motion.div>
-
-          {/* Tricolor accent line */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mx-auto w-52 h-1 rounded-full my-6 flex overflow-hidden"
-          >
-            <div className="flex-1 bg-[#FF9933]" />
-            <div className="flex-1 bg-[#003366]" />
-            <div className="flex-1 bg-[#138808]" />
           </motion.div>
 
           {/* Sub-headline */}
@@ -448,12 +345,12 @@ export default function PublicDashboard() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.9 }}
-            className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed"
+            className="text-xl md:text-[22px] text-gray-800 max-w-3xl mx-auto mt-8 mb-12 leading-relaxed font-medium drop-shadow-md"
           >
             Bridging the Gap Between{' '}
-            <span className="text-[#003366] font-semibold">Government Needs</span>{' '}
+            <span className="text-[#003366] font-extrabold drop-shadow-sm">Government Needs</span>{' '}
             &{' '}
-            <span className="text-[#FF9933] font-semibold">Startup Innovation</span>
+            <span className="text-[#FF9933] font-extrabold drop-shadow-sm">Startup Innovation</span>
           </motion.p>
 
           {/* CTA Buttons */}
@@ -465,43 +362,48 @@ export default function PublicDashboard() {
           >
             <Link
               to="/active-challenges"
-              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#FF9933] hover:bg-[#e68a2e] text-white font-bold text-base shadow-lg shadow-[#FF9933]/20 hover:shadow-xl hover:shadow-[#FF9933]/30 hover:scale-[1.02] transition-all duration-300"
+              className="group relative inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#FF9933] text-white rounded-lg font-bold overflow-hidden transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#FF9933]/30"
             >
-              <Globe size={18} />
-              Explore Challenges
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <Globe size={18} className="relative z-10" />
+              <span className="relative z-10">Explore Challenges</span>
+              <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/login"
-              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#003366] hover:bg-[#002244] text-white font-bold text-base shadow-lg shadow-[#003366]/20 hover:shadow-xl hover:shadow-[#003366]/30 hover:scale-[1.02] transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#003366] text-white rounded-lg font-bold transition-all hover:bg-[#002244] hover:shadow-lg hover:shadow-[#003366]/30 hover:scale-[1.02] active:scale-[0.98]"
             >
               <LogIn size={18} />
-              Portal Login
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <span>Portal Login</span>
+              <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
             </Link>
           </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 flex flex-col items-center gap-2"
-        >
-          <span className="text-xs text-gray-400 tracking-widest uppercase">
-            Scroll to explore
-          </span>
+          
+          {/* PM Modi Quote Pill */}
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.3 }}
+            className="flex items-center gap-4 bg-white/90 backdrop-blur-md rounded-full p-2 pr-8 shadow-xl border border-white/50 max-w-3xl mt-16 mx-auto"
           >
-            <ChevronDown size={20} className="text-[#FF9933]" />
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Official_Photograph_of_Prime_Minister_Narendra_Modi_Portrait.png/400px-Official_Photograph_of_Prime_Minister_Narendra_Modi_Portrait.png" 
+              alt="Narendra Modi"
+              className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-sm flex-shrink-0"
+            />
+            <div className="text-left py-1">
+              <p className="text-[10px] sm:text-xs font-semibold text-[#003366] italic leading-snug mb-1">
+                "I SEE STARTUPS, TECHNOLOGY AND INNOVATION AS EXCITING AND EFFECTIVE INSTRUMENTS FOR INDIA'S TRANSFORMATION."
+              </p>
+              <p className="text-[9px] uppercase font-bold text-gray-500 not-italic tracking-widest">
+                � NARENDRA MODI
+              </p>
+            </div>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* ── SECTION 2: THE VISION ───────────────────────────────────────── */}
+{/* ── SECTION 2: THE VISION ───────────────────────────────────────── */}
       <section id="vision" className="relative py-28 px-6 bg-white overflow-hidden">
         {/* Subtle top border accent */}
         <div className="absolute top-0 left-0 right-0 h-[3px] flex">
