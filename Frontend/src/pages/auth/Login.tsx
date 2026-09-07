@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import GovtEmblem from '../../components/shared/GovtEmblem';
@@ -120,7 +120,7 @@ export default function Login() {
                 size="sm" 
                 className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
                 onClick={() => {
-                  setAuth({ id: 'gov_mock', email: 'officer@gov.in', role: 'NODAL_OFFICER', verified: true }, 'mock_token');
+                  setAuth({ _id: 'gov_mock', email: 'officer@gov.in', role: 'NODAL_OFFICER', name: 'Mock Officer', profile: null }, 'mock_token');
                   navigate('/govt/dashboard', { replace: true });
                 }}
               >
@@ -132,7 +132,7 @@ export default function Login() {
                 size="sm" 
                 className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
                 onClick={() => {
-                  setAuth({ id: 'startup_mock', email: 'founder@startup.com', role: 'STARTUP_FOUNDER', verified: true }, 'mock_token');
+                  setAuth({ _id: 'startup_mock', email: 'founder@startup.com', role: 'STARTUP_FOUNDER', name: 'Mock Founder', profile: null }, 'mock_token');
                   navigate('/startup/dashboard', { replace: true });
                 }}
               >
@@ -159,7 +159,7 @@ export default function Login() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 autoComplete="current-password"
                 required
                 className="pr-10"
@@ -220,3 +220,7 @@ export default function Login() {
     </div>
   );
 }
+
+
+
+

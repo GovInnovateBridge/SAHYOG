@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+﻿import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore';
 import { Toaster } from 'react-hot-toast';
 
@@ -19,6 +19,7 @@ import PostChallenge from './pages/govt/PostChallenge';
 import ViewMatches from './pages/govt/ViewMatches';
 import GovtEscrow from './pages/govt/GovtEscrow';
 import BlindEvaluationPage from './pages/govt/BlindEvaluationPage';
+import SandboxTestPage from './pages/govt/SandboxTestPage';
 
 // Startup Pages
 import StartupDashboard from './pages/startup/StartupDashboard';
@@ -27,7 +28,7 @@ import MyPilots from './pages/startup/MyPilots';
 import UploadMilestones from './pages/startup/UploadMilestones';
 import TRLQuizPage from './pages/startup/TRLQuizPage';
 
-// ── Route Guards ──────────────────────────────────────────────────────────────
+// â”€â”€ Route Guards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const GovtRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthStore((s) => s.user);
@@ -41,7 +42,7 @@ const StartupRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// ── App ───────────────────────────────────────────────────────────────────────
+// â”€â”€ App â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function App() {
   return (
@@ -59,14 +60,15 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        {/* Protected — Govt */}
+        {/* Protected â€” Govt */}
         <Route path="/govt/dashboard" element={<GovtRoute><GovtDashboard /></GovtRoute>} />
         <Route path="/govt/post-challenge" element={<GovtRoute><PostChallenge /></GovtRoute>} />
         <Route path="/govt/matches" element={<GovtRoute><ViewMatches /></GovtRoute>} />
         <Route path="/govt/escrow" element={<GovtRoute><GovtEscrow /></GovtRoute>} />
         <Route path="/govt/blind-eval" element={<GovtRoute><BlindEvaluationPage /></GovtRoute>} />
+        <Route path="/govt/sandbox" element={<GovtRoute><SandboxTestPage /></GovtRoute>} />
 
-        {/* Protected — Startup */}
+        {/* Protected â€” Startup */}
         <Route path="/startup/dashboard" element={<StartupRoute><StartupDashboard /></StartupRoute>} />
         <Route path="/startup/challenges" element={<StartupRoute><ApplyChallenge /></StartupRoute>} />
         <Route path="/startup/pilots" element={<StartupRoute><MyPilots /></StartupRoute>} />

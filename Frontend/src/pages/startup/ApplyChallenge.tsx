@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import Navbar from '../../components/shared/Navbar';
 import Sidebar from '../../components/shared/Sidebar';
 import ChallengeMatchCard from '../../components/startup/ChallengeMatchCard';
@@ -45,18 +45,18 @@ export default function ApplyChallenge() {
   useEffect(() => {
     // Convert real challenges into mock "Matches" for the startup UI.
     // NOTE: there is no backend endpoint yet for "challenges matched to this
-    // startup" specifically — only GET /challenges/:id/matches (govt-side, per
+    // startup" specifically â€” only GET /challenges/:id/matches (govt-side, per
     // challenge). Until that exists, this stays a client-computed placeholder
     // over real challenge data, same fallback philosophy as everywhere else.
     const generatedMatches: Match[] = challenges
       .filter((c) => c.status === 'PUBLISHED' || c.status === 'OPEN') // Only show open/published
       .map((c, index) => ({
-        // ── Required real Match fields ──
+        // â”€â”€ Required real Match fields â”€â”€
         proposalId: c._id,
         founderName: c.title,
         matchScore: 0.95 - index * 0.05,
 
-        // ── UI alias fields ──
+        // â”€â”€ UI alias fields â”€â”€
         _id: c._id, // Use challenge ID as match ID for easy reference
         challengeId: c._id,
         startupId: 's_self',
@@ -114,25 +114,24 @@ export default function ApplyChallenge() {
 
     setSubmitting(true);
     try {
-      await submitProposal({
-        challengeId: activeMatch._id!, // matches were built from real challenge IDs
-        envelope_a_technical: {
-          domain: form.domain,
-          claimed_trl: Number(form.claimedTrl),
-          startup_pitch: form.pitch.trim(),
-          github_url: form.githubUrl.trim() || undefined,
-          live_url: form.liveUrl.trim() || undefined,
-        },
-        envelope_b_financial: {
-          pilot_execution_bid: {
-            amount_inr: Number(form.bidAmount),
-          },
-          payment_terms: form.paymentTerms.trim() || undefined,
-        },
-        proposal_metadata: {
-          proposal_id: `PROP-${Date.now()}`,
-        },
-      });
+      const formData = new FormData();
+      formData.append('challengeId', activeMatch._id!);
+      formData.append('envelope_a_technical', JSON.stringify({
+        domain: form.domain,
+        claimed_trl: Number(form.claimedTrl),
+        startup_pitch: form.pitch.trim(),
+        github_url: form.githubUrl.trim() || undefined,
+        live_url: form.liveUrl.trim() || undefined,
+      }));
+      formData.append('envelope_b_financial', JSON.stringify({
+        pilot_execution_bid: { amount_inr: Number(form.bidAmount) },
+        payment_terms: form.paymentTerms.trim() || undefined,
+      }));
+      formData.append('proposal_metadata', JSON.stringify({
+        proposal_id: `PROP-${Date.now()}`,
+      }));
+
+      await submitProposal(formData);
 
       toast.success('Proposal submitted successfully! You are now in the QCBS evaluation phase.');
 
@@ -193,7 +192,7 @@ export default function ApplyChallenge() {
       <Dialog
         isOpen={activeMatch !== null}
         onClose={closeDialog}
-        title={activeMatch ? `Apply — ${activeMatch.founderName}` : 'Apply'}
+        title={activeMatch ? `Apply â€” ${activeMatch.founderName}` : 'Apply'}
         size="lg"
         footer={
           <>
@@ -227,7 +226,7 @@ export default function ApplyChallenge() {
           </div>
 
           <Input
-            label="Claimed TRL Level (1–9)"
+            label="Claimed TRL Level (1â€“9)"
             type="number"
             min={1}
             max={9}
@@ -270,7 +269,7 @@ export default function ApplyChallenge() {
             onChange={updateField('bidAmount')}
             error={errors.bidAmount}
             placeholder="e.g. 1500000"
-            hint="This is the trial-period budget you're bidding for — not the full contract value."
+            hint="This is the trial-period budget you're bidding for â€” not the full contract value."
           />
 
           <Textarea

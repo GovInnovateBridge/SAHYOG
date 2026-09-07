@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/shared/Navbar';
 import Sidebar from '../../components/shared/Sidebar';
 import MatchScoreCircle from '../../components/govt/MatchScoreCircle';
@@ -49,7 +49,7 @@ export default function ViewMatches() {
                 className="w-full max-w-lg px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
               >
                 {challenges.map((ch) => (
-                  <option key={ch._id} value={ch._id}>{ch.title} — ({ch.status})</option>
+                  <option key={ch._id} value={ch._id}>{ch.title} â€” ({ch.status})</option>
                 ))}
               </select>
             )}
@@ -83,17 +83,17 @@ export default function ViewMatches() {
                     <tr key={match._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                       <td className="px-5 py-4 text-sm font-bold text-gray-400">#{index + 1}</td>
                       <td className="px-5 py-4">
-                        <MatchScoreCircle score={match.score} size={56} />
+                        <MatchScoreCircle score={match.score || 0} size={56} />
                       </td>
                       <td className="px-5 py-4">
                         <p className="text-sm font-semibold text-gray-900">{match.startupName}</p>
                         <p className="text-xs text-gray-500 mt-0.5">ID: {match.startupId}</p>
                       </td>
                       <td className="px-5 py-4">
-                        <TRLBadge level={match.trlLevel} verified />
+                        <TRLBadge level={match.trlLevel || 0} verified />
                       </td>
                       <td className="px-5 py-4">
-                        <Badge variant={statusVariants[match.status] || 'gray'} dot>
+                        <Badge variant={statusVariants[match.status || ''] || 'gray'} dot>
                           {match.status}
                         </Badge>
                       </td>
@@ -108,3 +108,4 @@ export default function ViewMatches() {
     </div>
   );
 }
+
