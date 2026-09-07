@@ -131,9 +131,17 @@ export default function Login() {
                 variant="outline" 
                 size="sm" 
                 className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                onClick={() => {
-                  setAuth({ _id: '6a9e31931aa65d8d74705895', email: 'founder@startup.com', role: 'STARTUP_FOUNDER', name: 'Mock Founder', profile: null }, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOWUzMTkzMWFhNjVkOGQ3NDcwNTg5NSIsInJvbGUiOiJTVEFSVFVQX0ZPVU5ERVIiLCJpYXQiOjE3ODg4MDAyODF9.uQJeZ_wD72sDSmWrtVfcfIiwur73eEcPkIyouAKH7Cs');
-                  navigate('/startup/dashboard', { replace: true });
+                onClick={async () => {
+                  const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOWUzMTkzMWFhNjVkOGQ3NDcwNTg5NSIsInJvbGUiOiJTVEFSVFVQX0ZPVU5ERVIiLCJpYXQiOjE3ODg4MDAyODF9.uQJeZ_wD72sDSmWrtVfcfIiwur73eEcPkIyouAKH7Cs';
+                  setAuth({ _id: '6a9e31931aa65d8d74705895', email: 'founder@startup.com', role: 'STARTUP_FOUNDER', name: 'Mock Founder', profile: null }, fakeToken);
+                  try {
+                    await api.post('/trl/bypass');
+                    const meRes = await api.get('/auth/me');
+                    setAuth(meRes.data, fakeToken);
+                    navigate('/startup/dashboard', { replace: true });
+                  } catch (e) {
+                    toast.error('Bypass failed');
+                  }
                 }}
               >
                 Bypass (Startup)
@@ -220,6 +228,7 @@ export default function Login() {
     </div>
   );
 }
+
 
 
 
