@@ -284,26 +284,224 @@ export default function PublicDashboard() {
         </div>
       </nav>
 
-      
-      
-      {/* SECTION 1: HERO */}
-      <section ref={heroRef} className="relative w-full bg-[#FAFBFD] overflow-hidden group">
-        <img 
-          src="/hero-mockup.png" 
-          alt="Sahyog Smart Innovation Platform - Bridging the Gap Between Government Needs & Startup Innovation" 
-          className="w-full h-auto object-cover md:object-contain min-h-[400px]"
-        />
-        
-        {/* Invisible Clickable Zones over the baked-in image buttons */}
-        <div className="absolute top-[57.5%] left-[26%] w-[14%] h-[7.5%]">
-          <Link to="/active-challenges" className="block w-full h-full cursor-pointer hover:bg-white/10 rounded-lg transition-colors" title="Explore Challenges" />
+      {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
+      <section
+        ref={heroRef}
+        className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 overflow-hidden"
+      >
+        {/* Animated parallax background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Grid pattern */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.03]">
+            <defs>
+              <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#003366" strokeWidth="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#heroGrid)" />
+          </svg>
+
+          {/* Slow-moving parallax layer 1 (far back) */}
+          <ParallaxLayer speed={-0.15}>
+            <FloatingShape
+              className="top-[8%] right-[12%] w-64 h-64 rounded-full border-2 border-[#FF9933]/[0.08]"
+              duration={25}
+              xRange={40}
+              yRange={30}
+            />
+            <FloatingShape
+              className="bottom-[15%] left-[8%] w-48 h-48 rounded-full bg-[#003366]/[0.03] blur-2xl"
+              duration={30}
+              delay={2}
+              xRange={50}
+              yRange={35}
+            />
+            <FloatingShape
+              className="top-[35%] left-[60%] w-20 h-20 rounded-lg border border-[#138808]/[0.1] rotate-12"
+              duration={18}
+              delay={5}
+              xRange={25}
+              yRange={20}
+            />
+          </ParallaxLayer>
+
+          {/* Parallax layer 2 (mid) */}
+          <ParallaxLayer speed={-0.08}>
+            <FloatingShape
+              className="top-[20%] left-[15%] w-32 h-32 rounded-full border border-[#003366]/[0.06]"
+              duration={22}
+              delay={1}
+              xRange={35}
+              yRange={28}
+            />
+            <FloatingShape
+              className="bottom-[25%] right-[18%] w-24 h-24 rounded-xl bg-[#FF9933]/[0.03] blur-xl"
+              duration={20}
+              delay={3}
+              xRange={30}
+              yRange={22}
+            />
+            <FloatingShape
+              className="top-[55%] left-[40%] w-16 h-16 rounded-full border border-[#FF9933]/[0.08]"
+              duration={16}
+              delay={4}
+              xRange={20}
+              yRange={15}
+            />
+          </ParallaxLayer>
+
+          {/* Parallax layer 3 (foreground accents) */}
+          <ParallaxLayer speed={-0.03}>
+            <FloatingShape
+              className="top-[12%] left-[45%] w-3 h-3 rounded-full bg-[#FF9933]/[0.2]"
+              duration={12}
+              xRange={15}
+              yRange={12}
+            />
+            <FloatingShape
+              className="top-[30%] right-[25%] w-2 h-2 rounded-full bg-[#003366]/[0.2]"
+              duration={14}
+              delay={2}
+              xRange={12}
+              yRange={10}
+            />
+            <FloatingShape
+              className="bottom-[30%] left-[25%] w-2.5 h-2.5 rounded-full bg-[#138808]/[0.2]"
+              duration={10}
+              delay={1}
+              xRange={18}
+              yRange={14}
+            />
+            <FloatingShape
+              className="top-[65%] right-[35%] w-2 h-2 rounded-full bg-[#FF9933]/[0.15]"
+              duration={15}
+              delay={6}
+              xRange={10}
+              yRange={8}
+            />
+          </ParallaxLayer>
+
+          {/* Soft gradient glows */}
+          <motion.div
+            className="absolute top-[10%] right-[5%] w-[500px] h-[500px] rounded-full bg-[#FF9933]/[0.04] blur-3xl"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.06, 0.04] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute bottom-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-[#003366]/[0.04] blur-3xl"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.04, 0.07, 0.04] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+          />
+          <motion.div
+            className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#138808]/[0.03] blur-3xl"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.05, 0.03] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+          />
         </div>
-        <div className="absolute top-[57.5%] left-[41%] w-[11.5%] h-[7.5%]">
-          <Link to="/login" className="block w-full h-full cursor-pointer hover:bg-white/10 rounded-lg transition-colors" title="Portal Login" />
-        </div>
+
+        <motion.div
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="text-center max-w-5xl mx-auto relative z-10"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-[#003366]/15 bg-[#003366]/[0.04]"
+          >
+            <Sparkles size={14} className="text-[#FF9933]" />
+            <span className="text-xs font-bold tracking-wider uppercase text-[#003366]">
+              Empowering Digital India · Smart Innovation Platform
+            </span>
+          </motion.div>
+
+          {/* 3D Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 50, rotateX: 20 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ perspective: 1200 }}
+          >
+            <div className="flex justify-center mb-4">
+              <GovtEmblem width={56} height={70} />
+            </div>
+            <h1 className="text-7xl md:text-8xl font-black tracking-tighter text-[#003366] leading-[0.9]">
+              SAHYOG
+            </h1>
+          </motion.div>
+
+          {/* Tricolor accent line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mx-auto w-52 h-1 rounded-full my-6 flex overflow-hidden"
+          >
+            <div className="flex-1 bg-[#FF9933]" />
+            <div className="flex-1 bg-[#003366]" />
+            <div className="flex-1 bg-[#138808]" />
+          </motion.div>
+
+          {/* Sub-headline */}
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.9 }}
+            className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed"
+          >
+            Bridging the Gap Between{' '}
+            <span className="text-[#003366] font-semibold">Government Needs</span>{' '}
+            &{' '}
+            <span className="text-[#FF9933] font-semibold">Startup Innovation</span>
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link
+              to="/active-challenges"
+              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#FF9933] hover:bg-[#e68a2e] text-white font-bold text-base shadow-lg shadow-[#FF9933]/20 hover:shadow-xl hover:shadow-[#FF9933]/30 hover:scale-[1.02] transition-all duration-300"
+            >
+              <Globe size={18} />
+              Explore Challenges
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              to="/login"
+              className="group flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#003366] hover:bg-[#002244] text-white font-bold text-base shadow-lg shadow-[#003366]/20 hover:shadow-xl hover:shadow-[#003366]/30 hover:scale-[1.02] transition-all duration-300"
+            >
+              <LogIn size={18} />
+              Portal Login
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-8 flex flex-col items-center gap-2"
+        >
+          <span className="text-xs text-gray-400 tracking-widest uppercase">
+            Scroll to explore
+          </span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <ChevronDown size={20} className="text-[#FF9933]" />
+          </motion.div>
+        </motion.div>
       </section>
 
-{/* ── SECTION 2: THE VISION ───────────────────────────────────────── */}
+      {/* ── SECTION 2: THE VISION ───────────────────────────────────────── */}
       <section id="vision" className="relative py-28 px-6 bg-white overflow-hidden">
         {/* Subtle top border accent */}
         <div className="absolute top-0 left-0 right-0 h-[3px] flex">
