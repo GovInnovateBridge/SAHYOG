@@ -479,11 +479,30 @@ export default function TRLQuizPage() {
             )}
 
           </div>
-        </main>
+                </main>
+      </div>
+      <div className="fixed bottom-4 right-4 z-50">
+        <button 
+          onClick={async () => {
+            try {
+              await api.post('/trl/bypass');
+              const meRes = await api.get('/auth/me');
+              useAuthStore.getState().setAuth(meRes.data, useAuthStore.getState().token || '');
+              toast.success('Bypass successful. Dashboard unlocked.');
+              navigate('/startup/dashboard');
+            } catch (err) {
+              toast.error('Bypass failed');
+            }
+          }}
+          className="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded shadow hover:bg-red-700"
+        >
+          DEV BYPASS TRL
+        </button>
       </div>
     </div>
   );
 }
+
 
 
 
