@@ -11,6 +11,7 @@ import VerifyEmail from './pages/auth/VerifyEmail';
 import PublicDashboard from './pages/PublicDashboard';
 import About from './pages/About';
 import ActiveChallengesPublic from './pages/ActiveChallengesPublic';
+import ChallengeDetailsPublic from './pages/ChallengeDetailsPublic';
 import Guidelines from './pages/Guidelines';
 
 // Govt Pages
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/" element={<PublicDashboard />} />
         <Route path="/about" element={<About />} />
         <Route path="/active-challenges" element={<ActiveChallengesPublic />} />
+        <Route path="/challenge/:id" element={<ChallengeDetailsPublic />} />
         <Route path="/guidelines" element={<Guidelines />} />
 
         {/* Auth */}
