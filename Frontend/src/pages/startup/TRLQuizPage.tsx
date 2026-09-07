@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { generateQuestions, verifyTRL, verifyHardwareDoc, verifyHardwareVideo } from '../../services/trlService';
 import api from '../../services/api';
-import api from '../../services/api';
 
 interface AssessmentResult {
   claimed_trl: number;
