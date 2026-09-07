@@ -21,4 +21,6 @@ export interface User {
   // organization/dpiitNumber no longer live flat on User — backend moved them
   // into separate StartupProfile/GovernmentProfile documents (see below).
   profile: StartupProfileData | GovernmentProfileData | null;
+  hasCompletedTrl?: boolean;
+  verifiedTrlScore?: number;
 }

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../../components/shared/Sidebar';
 import GovtEmblem from '../../components/shared/GovtEmblem';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -10,6 +10,7 @@ import {
   LogOut, BadgeCheck, Upload, Video, FileText, Key
 } from 'lucide-react';
 import { generateQuestions, verifyTRL, verifyHardwareDoc, verifyHardwareVideo } from '../../services/trlService';
+import api from '../../services/api';
 
 interface AssessmentResult {
   claimed_trl: number;
@@ -154,7 +155,7 @@ export default function TRLQuizPage() {
       setStep(3);
       
       if (res.verified) {
-        toast.success('Hardware video verified — OTP matched!');
+        toast.success('Hardware video verified � OTP matched!');
       } else {
         toast.error('Hardware video verification failed');
       }
@@ -228,10 +229,10 @@ export default function TRLQuizPage() {
                     <label className="text-sm font-semibold text-gray-700 mb-2 block">Domain</label>
                     <div className="flex gap-3">
                       <button onClick={() => setDomain('SOFTWARE')} className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-all ${domain === 'SOFTWARE' ? 'bg-blue-50 border-blue-500 text-blue-700' : 'border-gray-300 text-gray-500 hover:border-gray-400'}`}>
-                        💻 Software
+                        ?? Software
                       </button>
                       <button onClick={() => setDomain('HARDWARE')} className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-all ${domain === 'HARDWARE' ? 'bg-orange-50 border-orange-500 text-orange-700' : 'border-gray-300 text-gray-500 hover:border-gray-400'}`}>
-                        🔧 Hardware
+                        ?? Hardware
                       </button>
                     </div>
                   </div>
@@ -457,8 +458,20 @@ export default function TRLQuizPage() {
                       <p className="text-xs text-gray-400 mt-4">Technical Confidence: {Math.round(result.confidence * 100)}%</p>
                     )}
                     
-                    <button onClick={() => { setStep(1); setResult(null); }} className="mt-8 text-gray-500 font-semibold hover:text-gray-800 text-sm transition-colors">
-                      Restart Assessment
+                    <button 
+                      onClick={async () => {
+                        try {
+                          const meRes = await api.get('/auth/me');
+                          useAuthStore.getState().setAuth(meRes.data, useAuthStore.getState().token || '');
+                          toast.success('Dashboard Unlocked!');
+                          navigate('/startup/dashboard');
+                        } catch (err) {
+                          toast.error('Failed to sync auth state. Please login again.');
+                        }
+                      }} 
+                      className="mt-8 bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700 transition-colors shadow-sm"
+                    >
+                      Unlock Dashboard & Continue
                     </button>
                   </div>
                 )}
@@ -471,3 +484,4 @@ export default function TRLQuizPage() {
     </div>
   );
 }
+

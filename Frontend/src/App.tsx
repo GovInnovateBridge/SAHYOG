@@ -29,7 +29,7 @@ import MyPilots from './pages/startup/MyPilots';
 import UploadMilestones from './pages/startup/UploadMilestones';
 import TRLQuizPage from './pages/startup/TRLQuizPage';
 
-// â”€â”€ Route Guards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Route Guards ──────────────────────────────────────────────────────────────
 
 const GovtRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthStore((s) => s.user);
@@ -37,13 +37,18 @@ const GovtRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const StartupRoute = ({ children }: { children: React.ReactNode }) => {
+const StartupRoute = ({ children, requireTrl = true }: { children: React.ReactNode, requireTrl?: boolean }) => {
   const user = useAuthStore((s) => s.user);
   if (user?.role !== 'STARTUP_FOUNDER') return <Navigate to="/login" replace />;
+
+  if (requireTrl && !user.hasCompletedTrl) {
+    return <Navigate to="/startup/trl-quiz" replace />;
+  }
+
   return <>{children}</>;
 };
 
-// â”€â”€ App â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
   return (
@@ -62,7 +67,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        {/* Protected â€” Govt */}
+        {/* Protected — Govt */}
         <Route path="/govt/dashboard" element={<GovtRoute><GovtDashboard /></GovtRoute>} />
         <Route path="/govt/post-challenge" element={<GovtRoute><PostChallenge /></GovtRoute>} />
         <Route path="/govt/matches" element={<GovtRoute><ViewMatches /></GovtRoute>} />
@@ -70,12 +75,12 @@ export default function App() {
         <Route path="/govt/blind-eval" element={<GovtRoute><BlindEvaluationPage /></GovtRoute>} />
         <Route path="/govt/sandbox" element={<GovtRoute><SandboxTestPage /></GovtRoute>} />
 
-        {/* Protected â€” Startup */}
+        {/* Protected — Startup */}
         <Route path="/startup/dashboard" element={<StartupRoute><StartupDashboard /></StartupRoute>} />
         <Route path="/startup/challenges" element={<StartupRoute><ApplyChallenge /></StartupRoute>} />
         <Route path="/startup/pilots" element={<StartupRoute><MyPilots /></StartupRoute>} />
         <Route path="/startup/milestones" element={<StartupRoute><UploadMilestones /></StartupRoute>} />
-        <Route path="/startup/trl-quiz" element={<StartupRoute><TRLQuizPage /></StartupRoute>} />
+        <Route path="/startup/trl-quiz" element={<StartupRoute requireTrl={false}><TRLQuizPage /></StartupRoute>} />
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -83,3 +88,4 @@ export default function App() {
     </Router>
   );
 }
+

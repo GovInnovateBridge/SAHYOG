@@ -24,8 +24,12 @@ const startupLinks = [
 ];
 
 export default function Sidebar() {
-  const { isGovt } = useAuth();
-  const links = isGovt ? govtLinks : startupLinks;
+  const { isGovt, user } = useAuth();
+  let links = isGovt ? govtLinks : startupLinks;
+
+  if (!isGovt && user && !user.hasCompletedTrl) {
+    links = startupLinks.filter(l => l.to === '/startup/trl-quiz');
+  }
 
   return (
     <aside className="w-60 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
@@ -54,3 +58,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+
