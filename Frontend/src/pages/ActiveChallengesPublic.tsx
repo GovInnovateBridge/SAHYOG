@@ -177,7 +177,7 @@ function ChallengeCard({ challenge, index }: { challenge: Challenge; index: numb
           </div>
 
           <Link
-            to="/login"
+            to={`/challenge/${challenge.id}`}
             className={`flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r ${colors.gradient} text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}
           >
             View Details
