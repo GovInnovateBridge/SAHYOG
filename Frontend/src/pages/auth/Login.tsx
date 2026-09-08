@@ -120,9 +120,16 @@ export default function Login() {
                 variant="outline" 
                 size="sm" 
                 className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                onClick={() => {
-                  setAuth({ _id: '6a9e31931aa65d8d7470588d', email: 'officer@gov.in', role: 'NODAL_OFFICER', name: 'Mock Officer', profile: null }, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOWUzMTkzMWFhNjVkOGQ3NDcwNTg4ZCIsInJvbGUiOiJOT0RBTF9PRkZJQ0VSIiwiaWF0IjoxNzg4ODAwMjgxfQ.i4SHn33Gj0l3f3_8hbawUUNpQrXLAHicRM5b5tXSv0I');
-                  navigate('/govt/dashboard', { replace: true });
+                onClick={async () => {
+                  try {
+                    const { token } = await loginAPI({ email: 'rajesh.patil@gov.in', password: 'Password@123' });
+                    localStorage.setItem('sahyog_token', token);
+                    const user = await getMeAPI();
+                    setAuth(user, token);
+                    navigate('/govt/dashboard', { replace: true });
+                  } catch (e) {
+                    toast.error('Govt Bypass failed. Did you run seed.js?');
+                  }
                 }}
               >
                 Bypass (Govt)
@@ -133,15 +140,14 @@ export default function Login() {
                 size="sm" 
                 className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
                 onClick={async () => {
-                  const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOWUzMTkzMWFhNjVkOGQ3NDcwNTg5NSIsInJvbGUiOiJTVEFSVFVQX0ZPVU5ERVIiLCJpYXQiOjE3ODg4MDAyODF9.uQJeZ_wD72sDSmWrtVfcfIiwur73eEcPkIyouAKH7Cs';
-                  setAuth({ _id: '6a9e31931aa65d8d74705895', email: 'founder@startup.com', role: 'STARTUP_FOUNDER', name: 'Mock Founder', profile: null }, fakeToken);
                   try {
-                    await api.post('/trl/bypass');
-                    const meRes = await api.get('/auth/me');
-                    setAuth(meRes.data, fakeToken);
+                    const { token } = await loginAPI({ email: 'founder1@startup.com', password: 'Password@123' });
+                    localStorage.setItem('sahyog_token', token);
+                    const user = await getMeAPI();
+                    setAuth(user, token);
                     navigate('/startup/dashboard', { replace: true });
                   } catch (e) {
-                    toast.error('Bypass failed');
+                    toast.error('Startup Bypass failed. Did you run seed.js?');
                   }
                 }}
               >
