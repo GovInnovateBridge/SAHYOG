@@ -1,4 +1,4 @@
-﻿"""
+"""
 Sahyog TRL Engine â€” Zero-Trust TRL Evaluator
 LangChain + Gemini implementation for Question Generation & Verification.
 
@@ -56,6 +56,7 @@ Your job is to generate EXACTLY 3 highly technical verification questions for a 
 
 CRITICAL RULES:
 - The startup claims TRL {claimed_trl}, which falls in the "{tier_name}" tier ({trl_range}).
+- The startup is operating in the {domain} domain. Ensure questions are tailored to this domain.
 - You must generate questions that SPECIFICALLY verify capabilities at THIS tier level.
 - Questions must be deeply technical - they should be impossible to answer convincingly
   without actually having built the technology at the claimed level.
@@ -70,7 +71,7 @@ The startup's pitch/description:
 ])
 
 
-def generate_trl_questions(startup_pitch: str, claimed_trl: int) -> TRLQuestions:
+def generate_trl_questions(startup_pitch: str, claimed_trl: int, domain: str = "SOFTWARE") -> TRLQuestions:
     """
     TASK 1: Generate 3 technical verification questions for a startup's claimed TRL.
 
@@ -80,6 +81,7 @@ def generate_trl_questions(startup_pitch: str, claimed_trl: int) -> TRLQuestions
     Args:
         startup_pitch: The startup's description of their solution.
         claimed_trl: The TRL level they claim (1-9).
+        domain: The domain of the startup ('SOFTWARE' or 'HARDWARE').
 
     Returns:
         TRLQuestions with exactly 3 targeted technical questions.
@@ -93,6 +95,7 @@ def generate_trl_questions(startup_pitch: str, claimed_trl: int) -> TRLQuestions
         "claimed_trl": claimed_trl,
         "tier_name": tier.name,
         "trl_range": f"TRL {tier.trl_range[0]}-{tier.trl_range[1]}",
+        "domain": domain,
         "verification_focus": tier.verification_focus,
         "startup_pitch": startup_pitch,
         "format_instructions": parser.get_format_instructions(),

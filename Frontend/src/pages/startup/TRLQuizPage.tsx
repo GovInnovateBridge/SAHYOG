@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import Sidebar from '../../components/shared/Sidebar';
 import GovtEmblem from '../../components/shared/GovtEmblem';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -59,7 +59,7 @@ export default function TRLQuizPage() {
     setLoading(true);
     
     try {
-      const res = await generateQuestions(pitch, claimedTrl);
+      const res = await generateQuestions(pitch, claimedTrl, domain);
       setQuestions(res.questions || []);
       setAnswers(new Array(res.questions?.length || 3).fill(''));
       setStep(2);
@@ -155,7 +155,7 @@ export default function TRLQuizPage() {
       setStep(3);
       
       if (res.verified) {
-        toast.success('Hardware video verified � OTP matched!');
+        toast.success('Hardware video verified — OTP matched!');
       } else {
         toast.error('Hardware video verification failed');
       }
@@ -502,6 +502,7 @@ export default function TRLQuizPage() {
     </div>
   );
 }
+
 
 
 

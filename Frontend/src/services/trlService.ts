@@ -1,4 +1,4 @@
-﻿import api from './api';
+import api from './api';
 
 /**
  * TRL Service — calls the Node.js Backend API Gateway (port 5000).
@@ -50,11 +50,13 @@ export interface HardwareVideoResult {
  */
 export async function generateQuestions(
   startupPitch: string,
-  claimedTrl: number
+  claimedTrl: number,
+  domain: string
 ): Promise<TRLQuestionsResponse> {
   const res = await api.post('/trl/generate-questions', {
     startup_pitch: startupPitch,
     claimed_trl: claimedTrl,
+    domain: domain,
   });
   return res.data;
 }

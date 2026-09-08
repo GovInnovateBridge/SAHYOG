@@ -63,6 +63,11 @@ class QuestionRequest(BaseModel):
         example=5,
         description="The TRL level the startup claims (1-9)"
     )
+    domain: str = Field(
+        default="SOFTWARE",
+        example="SOFTWARE",
+        description="Domain of the startup, either 'SOFTWARE' or 'HARDWARE'"
+    )
 
 
 class VerifyRequest(BaseModel):
@@ -164,7 +169,7 @@ def api_generate_questions(req: QuestionRequest):
     The AI will generate 3 deeply technical questions targeting that specific tier.
     """
     try:
-        return generate_trl_questions(req.startup_pitch, req.claimed_trl)
+        return generate_trl_questions(req.startup_pitch, req.claimed_trl, req.domain)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
