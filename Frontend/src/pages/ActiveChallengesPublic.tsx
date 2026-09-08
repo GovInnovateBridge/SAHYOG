@@ -291,7 +291,7 @@ export default function ActiveChallengesPublic() {
   });
 
   return (
-    <div className="relative min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden font-[Inter,system-ui,sans-serif]">
+    <div className="relative min-h-screen bg-transparent text-slate-900 overflow-x-hidden font-[Inter,system-ui,sans-serif]">
       {/* ── Tricolor stripe ─────────────────────────────────────────────── */}
       <div className="h-[3px] flex z-[60] relative">
         <div className="flex-1 bg-[#FF9933]" />

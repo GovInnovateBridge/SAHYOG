@@ -5,7 +5,7 @@ import {
   Rocket, Target, CheckCircle, FileUp,
 } from 'lucide-react';
 
-import { ShieldAlert, HelpCircle } from 'lucide-react';
+import { ShieldAlert, HelpCircle, UserCircle } from 'lucide-react';
 
 const govtLinks = [
   { label: 'Dashboard', to: '/govt/dashboard', icon: LayoutDashboard },
@@ -16,7 +16,8 @@ const govtLinks = [
 ];
 
 const startupLinks = [
-  { label: 'Dashboard', to: '/startup/dashboard', icon: Rocket },
+  { label: 'Dashboard', to: '/startup', icon: Rocket },
+  { label: 'My Profile', to: '/startup/profile', icon: UserCircle },
   { label: 'Matched Challenges', to: '/startup/challenges', icon: Target },
   { label: 'TRL Assessment', to: '/startup/trl-quiz', icon: HelpCircle },
   { label: 'Active Sandboxes', to: '/startup/pilots', icon: CheckCircle },

@@ -3,12 +3,13 @@ import Navbar from '../../components/shared/Navbar';
 import Sidebar from '../../components/shared/Sidebar';
 import Button from '../../components/ui/Button';
 import { UploadCloud, FileText, CheckCircle, Loader2 } from 'lucide-react';
-import { claimMilestone, fetchEscrow } from '../../services/escrowService';
+import { claimMilestone, fetchEscrow, submitMilestoneReport } from '../../services/escrowService';
 import toast from 'react-hot-toast';
 import type { Escrow } from '../../types/Escrow';
 
 export default function UploadMilestones() {
   const [file, setFile] = useState<File | null>(null);
+  const [workDetails, setWorkDetails] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
 
@@ -37,15 +38,15 @@ export default function UploadMilestones() {
   };
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file && !workDetails) return;
     setUploading(true);
 
     try {
       if (escrow) {
-        // Find first non-released milestone — milestones are identified by "code" (M1/M2/M3), not an _id.
         const pending = escrow.milestones.find((m) => m.status !== 'RELEASED');
         if (pending) {
           await claimMilestone(escrow._id, pending.code);
+          await submitMilestoneReport(escrow._id, pending.code, workDetails || `Uploaded file: ${file?.name}`);
         }
       }
       toast.success('Milestone proof submitted successfully.');
@@ -88,12 +89,23 @@ export default function UploadMilestones() {
                       <p className="text-sm text-green-700 mt-2">
                         The 3-Day deemed approval timer has started. You will receive funds automatically if no objections are raised.
                       </p>
-                      <Button variant="outline" className="mt-6" onClick={() => { setUploaded(false); setFile(null); }}>
+                      <Button variant="outline" className="mt-6" onClick={() => { setUploaded(false); setFile(null); setWorkDetails(''); }}>
                         Upload Another
                       </Button>
                     </div>
                   ) : (
                     <>
+                      <div className="mb-6">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Work Details & Progress Summary</label>
+                        <textarea
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          rows={4}
+                          placeholder="Describe the work completed for this milestone..."
+                          value={workDetails}
+                          onChange={(e) => setWorkDetails(e.target.value)}
+                        />
+                      </div>
+
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center hover:bg-gray-50 transition-colors">
                         <UploadCloud size={40} className="mx-auto text-gray-400 mb-4" />
                         <p className="text-sm text-gray-600 mb-4">
@@ -127,7 +139,7 @@ export default function UploadMilestones() {
                       <div className="mt-6 flex justify-end">
                         <Button
                           variant="primary"
-                          disabled={!file}
+                          disabled={!file && !workDetails}
                           loading={uploading}
                           onClick={handleUpload}
                         >

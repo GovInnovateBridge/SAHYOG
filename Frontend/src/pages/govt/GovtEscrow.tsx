@@ -6,8 +6,8 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import type { Escrow } from '../../types/Escrow';
 import type { MilestoneCode } from '../../types/Milestone';
-import { fetchEscrow, releaseMilestone } from '../../services/escrowService';
-import { Loader2, Landmark, CheckCircle } from 'lucide-react';
+import { fetchEscrow, releaseMilestone, getMilestoneReport, submitOfficerAnalysis } from '../../services/escrowService';
+import { Loader2, Landmark, CheckCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Human-readable labels for each milestone code (backend only stores M1/M2/M3).
@@ -37,6 +37,13 @@ export default function GovtEscrow() {
   const [escrow, setEscrow] = useState<Escrow | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  // Modal State
+  const [selectedMilestoneForReport, setSelectedMilestoneForReport] = useState<MilestoneCode | null>(null);
+  const [reportData, setReportData] = useState<any>(null);
+  const [officerAnalysis, setOfficerAnalysis] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
+  const [analysisSaving, setAnalysisSaving] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -78,6 +85,39 @@ export default function GovtEscrow() {
     }
   };
 
+  const openReportModal = async (milestoneCode: MilestoneCode) => {
+    if (!escrow) return;
+    setSelectedMilestoneForReport(milestoneCode);
+    setReportLoading(true);
+    setOfficerAnalysis('');
+    
+    try {
+      const data = await getMilestoneReport(escrow._id, milestoneCode);
+      setReportData(data);
+      if (data && data.officerAnalysis) {
+        setOfficerAnalysis(data.officerAnalysis);
+      }
+    } catch (e) {
+      toast.error("Failed to load report");
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const saveAnalysis = async () => {
+    if (!escrow || !selectedMilestoneForReport) return;
+    setAnalysisSaving(true);
+    try {
+      await submitOfficerAnalysis(escrow._id, selectedMilestoneForReport, officerAnalysis);
+      toast.success("Analysis saved successfully");
+      setSelectedMilestoneForReport(null);
+    } catch (e) {
+      toast.error("Failed to save analysis");
+    } finally {
+      setAnalysisSaving(false);
+    }
+  };
+
   const formatINR = (n: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
 
@@ -99,11 +139,69 @@ export default function GovtEscrow() {
   }, [escrow]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col">
+    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col relative">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-8 overflow-y-auto relative">
+          
+          {/* REPORT MODAL */}
+          {selectedMilestoneForReport && (
+            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-6 border-b border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Milestone Report: {MILESTONE_LABELS[selectedMilestoneForReport]}
+                  </h3>
+                  <button onClick={() => setSelectedMilestoneForReport(null)} className="text-gray-400 hover:text-gray-600">
+                    <X size={24} />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto flex-1">
+                  {reportLoading ? (
+                    <div className="flex justify-center items-center py-10 text-gray-500">
+                      <Loader2 className="animate-spin mr-2" /> Loading report...
+                    </div>
+                  ) : reportData ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-2">Work Details Provided by Startup</h4>
+                        <div className="bg-gray-50 p-4 rounded-md border border-gray-200 text-sm text-gray-800 whitespace-pre-wrap">
+                          {reportData.workDetails}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-2">Government Officer Analysis</h4>
+                        <textarea
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          rows={6}
+                          placeholder="Write your evaluation analysis here before approving..."
+                          value={officerAnalysis}
+                          onChange={(e) => setOfficerAnalysis(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 text-gray-500">
+                      No report has been submitted by the startup yet.
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-6 border-t border-gray-200 flex justify-end gap-3 bg-gray-50 rounded-b-lg">
+                  <Button variant="outline" onClick={() => setSelectedMilestoneForReport(null)}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={saveAnalysis} disabled={!reportData} loading={analysisSaving}>
+                    Save Analysis
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="max-w-4xl mx-auto">
             <div className="mb-6 border-b border-gray-200 pb-4">
               <h2 className="text-2xl font-bold text-gray-900">Smart Escrow Vault</h2>
@@ -182,7 +280,7 @@ export default function GovtEscrow() {
                           )}
                           {(m.status === 'CLAIMED' || m.status === 'APPROVED' || m.status === 'DEEMED_APPROVED') && (
                             <div className="flex gap-2">
-                              <Button variant="outline" size="sm">View Report</Button>
+                              <Button variant="outline" size="sm" onClick={() => openReportModal(m.code)}>View Report</Button>
                               <Button
                                 variant="primary"
                                 size="sm"

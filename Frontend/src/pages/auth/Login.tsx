@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Shield, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import GovtEmblem from '../../components/shared/GovtEmblem';
-import Input from '../../components/ui/Input';
+import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import AuthLayout from '../../layouts/AuthLayout';
 import Button from '../../components/ui/Button';
 import { loginAPI, getMeAPI } from '../../services/authService';
-import api from '../../services/api';
 import { useAuthStore } from '../../store/useAuthStore';
 import type { UserRole } from '../../types/User';
 import toast from 'react-hot-toast';
@@ -40,16 +38,10 @@ export default function Login() {
         return;
       }
 
-      // Step 1: Get JWT token
       const { token } = await loginAPI({ email, password });
-
-      // Step 2: Set token in localStorage (api.ts interceptor picks it up)
       localStorage.setItem('sahyog_token', token);
-
-      // Step 3: Fetch the full user profile using the token
       const user = await getMeAPI();
 
-      // Step 4: Validate role matches
       if (user.role !== role) {
         localStorage.removeItem('sahyog_token');
         const roleError = `Access Denied: You are not registered as a ${role.replace('_', ' ')}.`;
@@ -59,25 +51,18 @@ export default function Login() {
         return;
       }
 
-      // Step 5: Store in Zustand
       setAuth(user, token);
       toast.success('Successfully logged in!');
 
-      // Step 6: Redirect based on actual role from backend
       if (user.role === 'NODAL_OFFICER') {
         navigate('/govt/dashboard', { replace: true });
       } else if (user.role === 'STARTUP_FOUNDER') {
         navigate('/startup/dashboard', { replace: true });
       } else {
-        // VIEWER
         navigate('/', { replace: true });
       }
-    } catch (err: unknown) {
-      const message =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        'Login failed. Please check your credentials.';
-
-      // Specific guidance for unverified email
+    } catch (err: any) {
+      const message = err?.response?.data?.message ?? 'Login failed. Please check your credentials.';
       if (message.toLowerCase().includes('not verified')) {
         setError('Your email is not verified. Please check your inbox for the OTP, or register again.');
         toast.error('Your email is not verified. Please check your inbox.');
@@ -91,155 +76,157 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-
-      <div className="absolute top-0 left-0 w-full bg-[var(--color-primary)] text-white text-sm py-2 px-6 flex justify-between items-center shadow">
-        <span className="font-semibold">SAHYOG PORTAL</span>
-        <Link to="/" className="flex items-center text-white/80 hover:text-white transition-colors text-xs">
-          <ArrowLeft size={14} className="mr-1" /> Return to Home
-        </Link>
-      </div>
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-md mt-10">
-        <div className="flex flex-col items-center mb-6">
-          <GovtEmblem width={56} height={68} />
-          <h2 className="mt-3 text-2xl font-bold text-gray-900 tracking-tight">Portal Authentication</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Authorized personnel and registered startups only
-          </p>
+    <AuthLayout>
+      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md mx-4 z-10 relative mt-8">
+        
+        {/* Developer Bypass Buttons */}
+        <div className="mb-6 pb-6 border-b border-red-100 flex flex-col gap-2">
+          <p className="text-[10px] text-red-500 font-bold uppercase text-center mb-1">Developer Testing Bypass</p>
+          <div className="flex gap-2">
+            <Button 
+              type="button"
+              variant="outline" 
+              size="sm" 
+              className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+              onClick={async () => {
+                try {
+                  const { token } = await loginAPI({ email: 'rajesh.patil@gov.in', password: 'Password@123' });
+                  localStorage.setItem('sahyog_token', token);
+                  const user = await getMeAPI();
+                  setAuth(user, token);
+                  navigate('/govt/dashboard', { replace: true });
+                } catch (e) {
+                  toast.error('Govt Bypass failed. Did you run seed.js?');
+                }
+              }}
+            >
+              Bypass (Govt)
+            </Button>
+            <Button 
+              type="button"
+              variant="outline" 
+              size="sm" 
+              className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+              onClick={async () => {
+                try {
+                  const { token } = await loginAPI({ email: 'founder1@startup.com', password: 'Password@123' });
+                  localStorage.setItem('sahyog_token', token);
+                  const user = await getMeAPI();
+                  setAuth(user, token);
+                  navigate('/startup/dashboard', { replace: true });
+                } catch (e) {
+                  toast.error('Startup Bypass failed. Did you run seed.js?');
+                }
+              }}
+            >
+              Bypass (Startup)
+            </Button>
+          </div>
         </div>
 
-        <div className="bg-white py-8 px-6 shadow-md border-t-4 border-[var(--color-primary)] rounded-b-lg sm:px-10">
+        <form onSubmit={handleSubmit} className="space-y-5">
           
-          {/* Developer Bypass Buttons */}
-          <div className="mb-6 pb-6 border-b border-red-100 flex flex-col gap-2">
-            <p className="text-[10px] text-red-500 font-bold uppercase text-center mb-1">Developer Testing Bypass</p>
-            <div className="flex gap-2">
-              <Button 
-                type="button"
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                onClick={async () => {
-                  try {
-                    const { token } = await loginAPI({ email: 'rajesh.patil@gov.in', password: 'Password@123' });
-                    localStorage.setItem('sahyog_token', token);
-                    const user = await getMeAPI();
-                    setAuth(user, token);
-                    navigate('/govt/dashboard', { replace: true });
-                  } catch (e) {
-                    toast.error('Govt Bypass failed. Did you run seed.js?');
-                  }
-                }}
-              >
-                Bypass (Govt)
-              </Button>
-              <Button 
-                type="button"
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                onClick={async () => {
-                  try {
-                    const { token } = await loginAPI({ email: 'founder1@startup.com', password: 'Password@123' });
-                    localStorage.setItem('sahyog_token', token);
-                    const user = await getMeAPI();
-                    setAuth(user, token);
-                    navigate('/startup/dashboard', { replace: true });
-                  } catch (e) {
-                    toast.error('Startup Bypass failed. Did you run seed.js?');
-                  }
-                }}
-              >
-                Bypass (Startup)
-              </Button>
-            </div>
-          </div>
-
-          <form className="space-y-5" onSubmit={handleSubmit}>
-
-            <Input
-              label="Registered Email"
+          {/* Email Field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-1.5">
+              Registered Email
+            </label>
+            <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => { setEmail(e.target.value); setError(''); }}
               placeholder="name@gov.in or founder@startup.com"
-              autoComplete="email"
               required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a365d] focus:border-[#1a365d] outline-none transition-colors"
             />
+          </div>
 
+          {/* Password Field */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-800 mb-1.5">
+              Password
+            </label>
             <div className="relative">
-              <Input
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(''); }}
                 placeholder="••••••••"
-                autoComplete="current-password"
                 required
-                className="pr-10"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a365d] focus:border-[#1a365d] outline-none transition-colors pr-12"
               />
               <button
                 type="button"
-                tabIndex={-1}
-                onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Select Your Role
-              </label>
-              <select
-                value={role}
-                onChange={(e) => { setRole(e.target.value as UserRole); setError(''); }}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm bg-white text-gray-900"
-              >
-                <option value="" disabled>Select Role</option>
-                <option value="NODAL_OFFICER">Nodal Officer (Govt)</option>
-                <option value="STARTUP_FOUNDER">Startup Founder</option>
-                <option value="VIEWER">Public Viewer</option>
-              </select>
+          {/* Role Field */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1.5">
+              Select Your Role
+            </label>
+            <select
+              value={role}
+              onChange={(e) => { setRole(e.target.value as UserRole); setError(''); }}
+              required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a365d] focus:border-[#1a365d] outline-none transition-colors bg-white text-gray-900"
+            >
+              <option value="" disabled>Select Role</option>
+              <option value="NODAL_OFFICER">Nodal Officer (Govt)</option>
+              <option value="STARTUP_FOUNDER">Startup Founder</option>
+              <option value="VIEWER">Public Viewer</option>
+            </select>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md px-3 py-2 text-xs text-red-700">
+              {error}
             </div>
+          )}
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-md px-3 py-2 text-xs text-red-700">
-                {error}
-              </div>
-            )}
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#1a365d] hover:bg-[#122643] text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors mt-2"
+          >
+            <ShieldCheck size={20} />
+            {loading ? 'Signing in...' : 'Secure Login'}
+          </button>
 
-            <div className="pt-2">
-              <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full">
-                <Shield size={16} className="mr-2 opacity-80" />
-                {loading ? 'Signing in...' : 'Secure Login'}
-              </Button>
-            </div>
+          {/* Forgot Password Link */}
+          <div className="flex justify-end mt-1">
+            <Link to="/forgot-password" className="text-xs text-[#1a365d] hover:underline font-medium">
+              Forgot Password?
+            </Link>
+          </div>
 
-            <p className="text-center text-sm text-gray-500">
-              No account yet?{' '}
-              <Link to="/register" className="text-[var(--color-primary)] font-semibold hover:underline">
-                Register here
-              </Link>
+          {/* Register Link */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-600">
+              No account yet? <Link to="/register" className="text-[#1a365d] font-semibold hover:underline">Register here</Link>
             </p>
+          </div>
 
-            <div className="text-center text-xs text-gray-400 pt-2 border-t border-gray-200">
-              Protected by Aadhaar &amp; NIC Security Protocols
-            </div>
-          </form>
-        </div>
+          {/* Divider 1 */}
+          <div className="relative flex items-center py-4">
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="flex-shrink-0 mx-4 text-xs text-gray-400">
+              Protected by Aadhaar & NIC Security Protocols
+            </span>
+            <div className="flex-grow border-t border-gray-200"></div>
+          </div>
+
+
+        </form>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
-
-
-
-
-
-
-
-

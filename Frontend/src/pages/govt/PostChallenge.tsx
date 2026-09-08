@@ -20,6 +20,7 @@ export default function PostChallenge() {
   const [result, setResult] = useState<null | {
     id: string;
     title: string;
+    scopeOfWork: string;
     kpis: { metric: string; target: string }[];
     budgetInr: number;
   }>(null);
@@ -48,6 +49,7 @@ export default function PostChallenge() {
       setResult({
         id: challenge._id,
         title: challenge.title || 'AI-Generated Challenge',
+        scopeOfWork: challenge.scopeOfWork || 'No scope of work generated',
         kpis: kpis.length > 0 ? kpis : [
           { metric: 'Anomaly Detection Accuracy', target: '>= 95%' },
           { metric: 'Real-time Processing Latency', target: '<= 200ms per frame' },
@@ -152,44 +154,72 @@ export default function PostChallenge() {
 
             {/* Result Card */}
             {result && !isGenerating && (
-              <div className="mt-8 bg-white border-2 border-[var(--color-india-green)] rounded-lg shadow-sm overflow-hidden animate-[fadeIn_0.4s_ease-out]">
-                <div className="bg-green-50 px-6 py-4 border-b border-green-200 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold text-green-700 uppercase tracking-wider mb-1">AI-Generated Challenge</p>
+              <div className="border border-gray-300 rounded-sm shadow-md mt-8 overflow-hidden bg-white">
+                {/* Formal Header */}
+                <div className="border-b-2 border-gray-800 p-6 text-center bg-gray-50">
+                  <img src="/logo2.png" alt="Emblem" className="h-16 mx-auto mb-3 opacity-80 grayscale" />
+                  <h2 className="text-xl font-serif font-bold text-gray-900 uppercase tracking-widest">Government of Maharashtra</h2>
+                  <p className="text-sm text-gray-600 font-serif mt-1 uppercase tracking-widest">Department of Innovation</p>
+                  <div className="w-16 h-0.5 bg-gray-400 mx-auto mt-4 mb-2"></div>
+                  <h3 className="text-lg font-serif font-bold text-gray-900 uppercase tracking-widest">Official Problem Statement Draft</h3>
+                </div>
+
+                <div className="p-8 font-serif">
+                  {/* Meta info */}
+                  <div className="flex justify-between items-start mb-8 text-sm text-gray-600 border-b border-gray-200 pb-4">
+                    <div>
+                      <span className="font-bold text-gray-800">Reference No:</span> DRAFT-{(new Date().getTime()).toString().slice(-6)}
+                    </div>
+                    <div className="text-right">
+                      <span className="font-bold text-gray-800">Date:</span> {new Date().toLocaleDateString('en-IN')}
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <div className="mb-6">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">1. Subject Title</h4>
                     <h3 className="text-lg font-bold text-gray-900">{result.title}</h3>
                   </div>
-                  <Badge variant="green" dot>Anti-Bias Cleared</Badge>
-                </div>
 
-                <div className="px-6 py-5">
-                  <h4 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Measurable KPIs</h4>
-                  <div className="space-y-2">
-                    {result.kpis.map((kpi, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-100">
-                        <span className="text-sm font-medium text-gray-800">{kpi.metric}</span>
-                        <span className="text-sm font-bold text-[var(--color-primary)]">{kpi.target}</span>
-                      </div>
-                    ))}
+                  {/* Scope */}
+                  <div className="mb-6">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">2. Scope of Work & Problem Description</h4>
+                    <p className="text-gray-800 leading-relaxed text-justify">
+                      {result.scopeOfWork}
+                    </p>
+                  </div>
+                  {/* KPIs */}
+                  <div className="mb-6">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">3. Key Performance Indicators (KPIs)</h4>
+                    <ul className="list-disc pl-5 space-y-2 text-gray-800">
+                      {result.kpis.map((kpi, i) => (
+                        <li key={i} className="pl-1">
+                          <span className="font-bold">{kpi.metric}</span>: {kpi.target}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between p-4 bg-blue-50 rounded border border-blue-200">
-                    <div>
-                      <p className="text-xs font-semibold text-blue-700 uppercase">Allocated Pilot Budget</p>
-                      <p className="text-lg font-bold text-gray-900 mt-1">
-                        {formatINR(result.budgetInr)}
-                      </p>
+                  {/* Budget */}
+                  <div className="mb-8">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">4. Allocated Pilot Budget</h4>
+                    <p className="text-gray-800 font-medium">₹ {result.budgetInr.toLocaleString('en-IN')} (INR)</p>
+                  </div>
+
+                  {/* Footer / CTA */}
+                  <div className="mt-8 pt-6 border-t-2 border-gray-800 flex items-center justify-between bg-gray-50 -mx-8 -mb-8 p-6">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="green" dot>Anti-Bias Cleared by ML</Badge>
                     </div>
-                    <Badge variant="blue">Smart Escrow Ready</Badge>
+                    <div className="flex gap-3">
+                      <Button variant="secondary" onClick={() => { setResult(null); setRawText(''); }} disabled={isPublishing}>
+                        Discard
+                      </Button>
+                      <Button onClick={() => handlePublish(result.id)} size="lg" className="shadow-lg" loading={isPublishing}>
+                        Approve & Publish to Startups
+                      </Button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
-                  <Button variant="secondary" onClick={() => { setResult(null); setRawText(''); }} disabled={isPublishing}>
-                    Discard & Retry
-                  </Button>
-                  <Button variant="primary" onClick={handlePublish} loading={isPublishing}>
-                    Publish Challenge
-                  </Button>
                 </div>
               </div>
             )}

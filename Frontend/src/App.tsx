@@ -1,11 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/useAuthStore';
 import { Toaster } from 'react-hot-toast';
+import SahyogAIAssistant from './components/shared/SahyogAIAssistant';
 
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import VerifyEmail from './pages/auth/VerifyEmail';
+import ForgotPassword from './pages/auth/ForgotPassword';
 
 // Public Pages
 import PublicDashboard from './pages/PublicDashboard';
@@ -22,8 +24,8 @@ import GovtEscrow from './pages/govt/GovtEscrow';
 import BlindEvaluationPage from './pages/govt/BlindEvaluationPage';
 import SandboxTestPage from './pages/govt/SandboxTestPage';
 
-// Startup Pages
 import StartupDashboard from './pages/startup/StartupDashboard';
+import StartupProfile from './pages/startup/StartupProfile';
 import ApplyChallenge from './pages/startup/ApplyChallenge';
 import MyPilots from './pages/startup/MyPilots';
 import UploadMilestones from './pages/startup/UploadMilestones';
@@ -54,6 +56,7 @@ export default function App() {
   return (
     <Router>
       <Toaster position="top-right" />
+      <SahyogAIAssistant />
       <Routes>
         {/* Public */}
         <Route path="/" element={<PublicDashboard />} />
@@ -66,6 +69,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected — Govt */}
         <Route path="/govt/dashboard" element={<GovtRoute><GovtDashboard /></GovtRoute>} />
@@ -80,6 +84,8 @@ export default function App() {
         <Route path="/startup/challenges" element={<StartupRoute><ApplyChallenge /></StartupRoute>} />
         <Route path="/startup/pilots" element={<StartupRoute><MyPilots /></StartupRoute>} />
         <Route path="/startup/milestones" element={<StartupRoute><UploadMilestones /></StartupRoute>} />
+        <Route path="/startup" element={<StartupRoute><StartupDashboard /></StartupRoute>} />
+        <Route path="/startup/profile" element={<StartupRoute><StartupProfile /></StartupRoute>} />
         <Route path="/startup/trl-quiz" element={<StartupRoute requireTrl={false}><TRLQuizPage /></StartupRoute>} />
 
         {/* Catch-all */}

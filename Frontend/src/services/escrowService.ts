@@ -57,3 +57,43 @@ export const rejectMilestone = async (
   const { data } = await api.post('/escrow/reject', { escrowId, milestoneCode, partialAmount });
   return data;
 };
+
+/**
+ * GET /api/escrow/:escrowId/milestone/:milestoneCode/report
+ */
+export const getMilestoneReport = async (escrowId: string, milestoneCode: MilestoneCode) => {
+  try {
+    const { data } = await api.get(`/escrow/${escrowId}/milestone/${milestoneCode}/report`);
+    return data;
+  } catch (error) {
+    return null; // Return null if no report exists yet
+  }
+};
+
+/**
+ * POST /api/escrow/:escrowId/milestone/:milestoneCode/report
+ */
+export const submitMilestoneReport = async (
+  escrowId: string,
+  milestoneCode: MilestoneCode,
+  workDetails: string
+) => {
+  const { data } = await api.post(`/escrow/${escrowId}/milestone/${milestoneCode}/report`, {
+    workDetails,
+  });
+  return data;
+};
+
+/**
+ * PUT /api/escrow/:escrowId/milestone/:milestoneCode/analyze
+ */
+export const submitOfficerAnalysis = async (
+  escrowId: string,
+  milestoneCode: MilestoneCode,
+  officerAnalysis: string
+) => {
+  const { data } = await api.put(`/escrow/${escrowId}/milestone/${milestoneCode}/analyze`, {
+    officerAnalysis,
+  });
+  return data;
+};
