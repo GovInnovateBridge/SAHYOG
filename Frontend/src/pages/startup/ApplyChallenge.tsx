@@ -1,35 +1,21 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/shared/Navbar';
 import Sidebar from '../../components/shared/Sidebar';
 import ChallengeMatchCard from '../../components/startup/ChallengeMatchCard';
 import Dialog from '../../components/ui/Dialog';
-import Input from '../../components/ui/Input';
-import Textarea from '../../components/ui/Textarea';
 import Button from '../../components/ui/Button';
 import type { Match } from '../../types/Match';
-import { Loader2, Target } from 'lucide-react';
+import { Loader2, Target, Upload, Download, FileText } from 'lucide-react';
 import { useFetchChallenges } from '../../hooks/useFetchChallenges';
 import { submitProposal } from '../../services/proposalService';
 import toast from 'react-hot-toast';
 
 interface ApplicationForm {
-  domain: 'SOFTWARE' | 'HARDWARE';
-  claimedTrl: string;
-  pitch: string;
-  githubUrl: string;
-  liveUrl: string;
-  bidAmount: string;
-  paymentTerms: string;
+  proposalFile: File | null;
 }
 
 const EMPTY_FORM: ApplicationForm = {
-  domain: 'SOFTWARE',
-  claimedTrl: '',
-  pitch: '',
-  githubUrl: '',
-  liveUrl: '',
-  bidAmount: '',
-  paymentTerms: '',
+  proposalFile: null,
 };
 
 export default function ApplyChallenge() {
@@ -83,25 +69,11 @@ export default function ApplyChallenge() {
     setActiveMatch(null);
   };
 
-  const updateField =
-    (field: keyof ApplicationForm) =>
-      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm((prev) => ({ ...prev, [field]: e.target.value }));
-        setErrors((prev) => ({ ...prev, [field]: undefined }));
-      };
-
   const validate = (): boolean => {
     const next: Partial<Record<keyof ApplicationForm, string>> = {};
-    const trl = Number(form.claimedTrl);
-    const bid = Number(form.bidAmount);
 
-    if (!form.claimedTrl || trl < 1 || trl > 9) next.claimedTrl = 'Enter a TRL between 1 and 9.';
-    if (!form.pitch.trim() || form.pitch.trim().length < 30) {
-      next.pitch = 'Please describe your solution in at least 30 characters.';
-    }
-    if (!form.bidAmount || bid <= 0) next.bidAmount = 'Enter your proposed pilot bid amount in INR.';
-    if (form.domain === 'SOFTWARE' && !form.githubUrl && !form.liveUrl) {
-      next.githubUrl = 'Provide a GitHub repo or a live URL as evidence for TRL verification.';
+    if (!form.proposalFile) {
+      next.proposalFile = 'Please upload your technical proposal document.';
     }
 
     setErrors(next);
@@ -117,19 +89,20 @@ export default function ApplyChallenge() {
       const formData = new FormData();
       formData.append('challengeId', activeMatch._id!);
       formData.append('envelope_a_technical', JSON.stringify({
-        domain: form.domain,
-        claimed_trl: Number(form.claimedTrl),
-        startup_pitch: form.pitch.trim(),
-        github_url: form.githubUrl.trim() || undefined,
-        live_url: form.liveUrl.trim() || undefined,
+        domain: 'SOFTWARE',
+        claimed_trl: 5,
+        startup_pitch: 'See attached detailed technical proposal.',
       }));
       formData.append('envelope_b_financial', JSON.stringify({
-        pilot_execution_bid: { amount_inr: Number(form.bidAmount) },
-        payment_terms: form.paymentTerms.trim() || undefined,
+        pilot_execution_bid: { amount_inr: 0 },
+        payment_terms: 'See attached document.',
       }));
       formData.append('proposal_metadata', JSON.stringify({
         proposal_id: `PROP-${Date.now()}`,
       }));
+      if (form.proposalFile) {
+        formData.append('proposal_document', form.proposalFile);
+      }
 
       await submitProposal(formData);
 
@@ -206,79 +179,38 @@ export default function ApplyChallenge() {
         }
       >
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Solution Domain</label>
-            <div className="flex gap-3">
-              {(['SOFTWARE', 'HARDWARE'] as const).map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, domain: d }))}
-                  className={`flex-1 py-2 rounded-md text-sm font-semibold border transition-colors ${form.domain === d
-                      ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
-                      : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
-                    }`}
-                >
-                  {d === 'SOFTWARE' ? 'Software' : 'Hardware / DeepTech'}
-                </button>
-              ))}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <label className="block text-sm font-semibold text-gray-700">Detailed Technical Proposal (Envelope A)</label>
+              <a href="/Sample_Proposal_Format.pdf" download="Sample_Proposal_Format.pdf" target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--color-primary)] hover:underline flex items-center">
+                <Download size={14} className="mr-1" /> Sample Proposal Format
+              </a>
             </div>
+            <div className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center transition-colors cursor-pointer relative ${errors.proposalFile ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}>
+              <input 
+                type="file" 
+                accept=".pdf,.doc,.docx" 
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => {
+                  setForm(prev => ({ ...prev, proposalFile: e.target.files?.[0] || null }));
+                  setErrors(prev => ({ ...prev, proposalFile: undefined }));
+                }}
+              />
+              <Upload size={24} className={`${errors.proposalFile ? 'text-red-400' : 'text-gray-400'} mb-2`} />
+              {form.proposalFile ? (
+                <div className="flex items-center text-sm font-medium text-green-600">
+                  <FileText size={16} className="mr-2" />
+                  {form.proposalFile.name}
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600">Click to upload your proposal document</p>
+                  <p className="text-xs text-gray-400 mt-1">PDF, DOC, DOCX up to 5MB</p>
+                </>
+              )}
+            </div>
+            {errors.proposalFile && <p className="text-xs text-red-500 mt-1">{errors.proposalFile}</p>}
           </div>
-
-          <Input
-            label="Claimed TRL Level (1â€“9)"
-            type="number"
-            min={1}
-            max={9}
-            value={form.claimedTrl}
-            onChange={updateField('claimedTrl')}
-            error={errors.claimedTrl}
-            placeholder="e.g. 7"
-          />
-
-          <Textarea
-            label="Solution Pitch"
-            value={form.pitch}
-            onChange={updateField('pitch')}
-            error={errors.pitch}
-            placeholder="Describe your solution, how it addresses the KPIs, and why it fits this challenge..."
-            rows={5}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="GitHub Repo URL"
-              value={form.githubUrl}
-              onChange={updateField('githubUrl')}
-              error={errors.githubUrl}
-              placeholder="https://github.com/..."
-            />
-            <Input
-              label="Live Demo / Product URL"
-              value={form.liveUrl}
-              onChange={updateField('liveUrl')}
-              placeholder="https://..."
-            />
-          </div>
-
-          <Input
-            label="Proposed Pilot Bid (INR)"
-            type="number"
-            min={0}
-            value={form.bidAmount}
-            onChange={updateField('bidAmount')}
-            error={errors.bidAmount}
-            placeholder="e.g. 1500000"
-            hint="This is the trial-period budget you're bidding for â€” not the full contract value."
-          />
-
-          <Textarea
-            label="Payment Terms (optional)"
-            value={form.paymentTerms}
-            onChange={updateField('paymentTerms')}
-            placeholder="Any notes on milestone-linked payment expectations..."
-            rows={2}
-          />
         </div>
       </Dialog>
     </div>
