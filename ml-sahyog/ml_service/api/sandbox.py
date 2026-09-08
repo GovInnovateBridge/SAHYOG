@@ -9,8 +9,8 @@ import google.generativeai as genai
 router = APIRouter()
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# Using gemini-2.5-flash as 1.5-flash has been sunset in this environment
-MODEL_NAME = "gemini-2.5-flash"
+# Using gemini-3.6-flash as 1.5-flash has been sunset in this environment
+MODEL_NAME = "gemini-3.6-flash"
 
 class SandboxRequest(BaseModel):
     problem_statement: str

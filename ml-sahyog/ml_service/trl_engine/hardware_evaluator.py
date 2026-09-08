@@ -18,9 +18,9 @@ def _get_vision_llm():
         if not api_key:
             raise EnvironmentError("GOOGLE_API_KEY is not set.")
         
-        # gemini-2.5-flash natively supports vision/multimodal
+        # gemini-3.6-flash natively supports vision/multimodal
         _vision_llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             google_api_key=api_key,
             temperature=0.1,
         )

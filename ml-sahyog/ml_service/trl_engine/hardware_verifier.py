@@ -16,7 +16,7 @@ router = APIRouter(prefix="/hardware", tags=["Hardware TRL Verification"])
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Use Gemini 2.5 Flash for Vision tasks (latest stable model available)
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-3.6-flash"
 
 def clean_json_response(text: str) -> str:
     """Helper function to clean markdown formatting from Gemini JSON responses."""
