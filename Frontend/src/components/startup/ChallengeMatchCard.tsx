@@ -1,4 +1,4 @@
-﻿import type { Match } from '../../types/Match';
+import type { Match } from '../../types/Match';
 import MatchScoreCircle from '../govt/MatchScoreCircle';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
@@ -51,7 +51,7 @@ export default function ChallengeMatchCard({ match, onApply }: ChallengeMatchCar
         </Button>
       )}
       {match.status === 'APPLIED' && (
-        <span className="text-xs font-bold text-green-600 flex-shrink-0">Proposal Submitted âœ“</span>
+        <span className="text-xs font-bold text-green-600 flex-shrink-0">Proposal Submitted ✓</span>
       )}
     </div>
   );

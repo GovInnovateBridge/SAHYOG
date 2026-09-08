@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/shared/Navbar';
 import Sidebar from '../../components/shared/Sidebar';
 import MatchScoreCircle from '../../components/govt/MatchScoreCircle';
@@ -49,7 +49,7 @@ export default function ViewMatches() {
                 className="w-full max-w-lg px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
               >
                 {challenges.map((ch) => (
-                  <option key={ch._id} value={ch._id}>{ch.title} â€” ({ch.status})</option>
+                  <option key={ch._id} value={ch._id}>{ch.title} - ({ch.status})</option>
                 ))}
               </select>
             )}

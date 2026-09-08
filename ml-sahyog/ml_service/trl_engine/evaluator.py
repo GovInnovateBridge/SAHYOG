@@ -1,5 +1,5 @@
 """
-Sahyog TRL Engine â€” Zero-Trust TRL Evaluator
+Sahyog TRL Engine - Zero-Trust TRL Evaluator
 LangChain + Gemini implementation for Question Generation & Verification.
 
 Architecture:
@@ -17,9 +17,9 @@ from .schemas import TRLQuestions, TRLVerificationResult, BackendProofs
 from .rules import get_tier_for_trl, compute_verified_trl, SOFTWARE_TRL_TIERS
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ----------------------------------------------
 # LLM Initialization (loaded ONCE at import)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ----------------------------------------------
 _llm = None
 
 
@@ -47,7 +47,7 @@ def _get_llm() -> ChatGoogleGenerativeAI:
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 # The prompt is designed so the LLM generates questions that target
-# the SPECIFIC verification focus of the claimed tier â€” not generic
+# the SPECIFIC verification focus of the claimed tier - not generic
 # startup questions. The predefined rules are injected as context.
 
 _QUESTION_GEN_PROMPT = ChatPromptTemplate.from_messages([
@@ -162,7 +162,7 @@ def verify_and_score_trl(
 
     This function enforces a strict separation of concerns:
       1. DETERMINISTIC (Python): The downgrade algorithm runs first using
-         backend_proofs. This is NON-NEGOTIABLE â€” no LLM can override it.
+         backend_proofs. This is NON-NEGOTIABLE - no LLM can override it.
       2. LLM (Gemini): Evaluates the technical quality of the text answers
          and produces a confidence score + evaluation report.
 
@@ -181,7 +181,7 @@ def verify_and_score_trl(
         TRLVerificationResult with fraud detection, verified TRL, confidence,
         and detailed evaluation report.
     """
-    # â”€â”€ STEP 1: Deterministic Rule Engine (NO LLM) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # -- STEP 1: Deterministic Rule Engine (NO LLM) --------------
     verified_trl, is_fraud, downgrade_reason = compute_verified_trl(
         claimed_trl=claimed_trl,
         backend_proofs=backend_proofs,
@@ -189,7 +189,7 @@ def verify_and_score_trl(
 
     tier = get_tier_for_trl(claimed_trl)
 
-    # â”€â”€ STEP 2: Format Q&A pairs for the LLM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # -- STEP 2: Format Q&A pairs for the LLM -------------------
     qa_pairs = ""
     for i, (q, a) in enumerate(zip(questions, user_answers), start=1):
         qa_pairs += f"Q{i}: {q}\nA{i}: {a}\n\n"
@@ -200,7 +200,7 @@ def verify_and_score_trl(
         for key, val in backend_proofs.items()
     )
 
-    # â”€â”€ STEP 3: LLM Technical Evaluation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # -- STEP 3: LLM Technical Evaluation -----------------------
     parser = PydanticOutputParser(pydantic_object=TRLVerificationResult)
 
     chain = _VERIFICATION_PROMPT | _get_llm() | parser
@@ -233,7 +233,7 @@ def verify_and_score_trl(
             ),
         )
 
-    # â”€â”€ STEP 4: OVERRIDE â€” Rule engine always wins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # -- STEP 4: OVERRIDE - Rule engine always wins -------------
     # The LLM might hallucinate different values. We forcefully
     # overwrite the critical fields with the deterministic results.
     result.claimed_trl = claimed_trl

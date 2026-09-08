@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import GovtEmblem from '../../components/shared/GovtEmblem';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 import { fetchChallenges } from '../../services/challengeService';
 import type { Challenge } from '../../types/Challenge';
 
-// â”€â”€ Mock Data (visual only â€” fallback if backend is empty) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Mock Data (visual only â€” fallback if backend is empty) -------------------
 
 const RECENT_CHALLENGES: any[] = [
   { id: 'ch_004', title: 'AI Pothole Detection via Drone Feed', dept: 'PWD Maharashtra', status: 'SANDBOX_ACTIVE', matches: 3, posted: '2 days ago' },
@@ -31,11 +31,11 @@ const STATUS_STYLE: Record<string, { variant: 'blue' | 'green' | 'orange' | 'gra
 };
 
 const ACTIVITY_FEED = [
-  { icon: <Sparkles size={14} />, color: 'text-blue-600 bg-blue-50', text: 'AeroDrone Vision matched to Challenge #4 â€” Score 91%', time: '12 min ago' },
-  { icon: <Landmark size={14} />, color: 'text-green-600 bg-green-50', text: 'â‚¹4L trial budget released for M1 â€” RoadSense AI', time: '1 hr ago' },
-  { icon: <ShieldCheck size={14} />, color: 'text-red-500 bg-red-50', text: 'Anti-bias filter blocked a draft â€” 2 exclusionary clauses found', time: '3 hrs ago' },
-  { icon: <CheckCircle2 size={14} />, color: 'text-green-600 bg-green-50', text: 'SkyNet Analytics completed all 3 milestones â€” Sahyog Verified', time: 'Yesterday' },
-  { icon: <Clock size={14} />, color: 'text-orange-500 bg-orange-50', text: '7-day deemed approval triggered for M2 â€” Challenge #2', time: 'Yesterday' },
+  { icon: <Sparkles size={14} />, color: 'text-blue-600 bg-blue-50', text: 'AeroDrone Vision matched to Challenge #4 - Score 91%', time: '12 min ago' },
+  { icon: <Landmark size={14} />, color: 'text-green-600 bg-green-50', text: '₹4L trial budget released for M1 - RoadSense AI', time: '1 hr ago' },
+  { icon: <ShieldCheck size={14} />, color: 'text-red-500 bg-red-50', text: 'Anti-bias filter blocked a draft - 2 exclusionary clauses found', time: '3 hrs ago' },
+  { icon: <CheckCircle2 size={14} />, color: 'text-green-600 bg-green-50', text: 'SkyNet Analytics completed all 3 milestones - Sahyog Verified', time: 'Yesterday' },
+  { icon: <Clock size={14} />, color: 'text-orange-500 bg-orange-50', text: '7-day deemed approval triggered for M2 - Challenge #2', time: 'Yesterday' },
 ];
 
 const PIPELINE = [
@@ -54,7 +54,7 @@ const TRL_DISTRIBUTION = [
 ];
 const MAX_TRL_COUNT = Math.max(...TRL_DISTRIBUTION.map((t) => t.count));
 
-// â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Component -----------------------------------------------------------------
 
 export default function GovtDashboard() {
   const { user, logout } = useAuthStore();
@@ -152,7 +152,7 @@ export default function GovtDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
                 <StatCard label="Active Challenges" value={challenges.length.toString()} accent="border-t-blue-500" icon={<FileText size={16} className="text-blue-500" />} />
                 <StatCard label="Startups Verified" value="84" accent="border-t-[var(--color-india-green)]" icon={<Users size={16} className="text-[var(--color-india-green)]" />} />
-                <StatCard label="Escrow Locked (INR)" value="â‚¹1.2 Cr" accent="border-t-[var(--color-saffron)]" icon={<Landmark size={16} className="text-[var(--color-saffron)]" />} />
+                <StatCard label="Escrow Locked (INR)" value="₹1.2 Cr" accent="border-t-[var(--color-saffron)]" icon={<Landmark size={16} className="text-[var(--color-saffron)]" />} />
                 <StatCard label="Avg. Trial Success Rate" value="67%" accent="border-t-purple-500" icon={<TrendingUp size={16} className="text-purple-500" />} />
               </div>
 
@@ -299,7 +299,7 @@ export default function GovtDashboard() {
   );
 }
 
-// â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Sub-components ------------------------------------------------------------
 
 function StatCard({ label, value, accent, icon }: { label: string; value: string; accent: string; icon: React.ReactNode }) {
   return (

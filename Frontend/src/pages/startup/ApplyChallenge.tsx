@@ -31,18 +31,18 @@ export default function ApplyChallenge() {
   useEffect(() => {
     // Convert real challenges into mock "Matches" for the startup UI.
     // NOTE: there is no backend endpoint yet for "challenges matched to this
-    // startup" specifically â€” only GET /challenges/:id/matches (govt-side, per
+    // startup" specifically - only GET /challenges/:id/matches (govt-side, per
     // challenge). Until that exists, this stays a client-computed placeholder
     // over real challenge data, same fallback philosophy as everywhere else.
     const generatedMatches: Match[] = challenges
       .filter((c) => c.status === 'PUBLISHED' || c.status === 'OPEN') // Only show open/published
       .map((c, index) => ({
-        // â”€â”€ Required real Match fields â”€â”€
+        // -- Required real Match fields --
         proposalId: c._id,
         founderName: c.title,
         matchScore: 0.95 - index * 0.05,
 
-        // â”€â”€ UI alias fields â”€â”€
+        // -- UI alias fields --
         _id: c._id, // Use challenge ID as match ID for easy reference
         challengeId: c._id,
         startupId: 's_self',
@@ -165,7 +165,7 @@ export default function ApplyChallenge() {
       <Dialog
         isOpen={activeMatch !== null}
         onClose={closeDialog}
-        title={activeMatch ? `Apply â€” ${activeMatch.founderName}` : 'Apply'}
+        title={activeMatch ? `Apply - ${activeMatch.founderName}` : 'Apply'}
         size="lg"
         footer={
           <>
