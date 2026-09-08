@@ -10,8 +10,8 @@ export const fetchChallengeById = async (id: string) => {
   return response.data;
 };
 
-export const publishChallenge = async (challengeData: any) => {
-  const { data } = await api.post('/challenges', challengeData);
+export const publishChallenge = async (id: string) => {
+  const { data } = await api.patch(`/challenges/${id}/publish`);
   return data;
 };
 

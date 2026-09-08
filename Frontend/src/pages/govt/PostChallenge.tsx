@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function PostChallenge() {
   const [rawText, setRawText] = useState('');
+  const [pilotBudget, setPilotBudget] = useState('1500000');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const navigate = useNavigate();
@@ -29,13 +30,13 @@ export default function PostChallenge() {
     setResult(null);
 
     try {
-      // Create Challenge as DRAFT which triggers backend ML KPI extraction
+      // Create Challenge as DRAFT which triggers backend ML Formulator
       const { data } = await api.post('/challenges/create', {
-        title: 'AI Generated Challenge Title', // Fallback, would normally let user edit
+        title: 'AI Generated Challenge Title',
         problemStatementRaw: rawText,
         scopeOfWork: 'To be defined based on KPIs',
         expectedDeliverables: 'Working prototype matching KPIs',
-        pilotBudgetInr: 1500000,
+        pilotBudgetInr: Number(pilotBudget) || 1500000,
         category: 'SMART_CITY',
         departmentName: 'Nodal Department'
       });
@@ -54,8 +55,12 @@ export default function PostChallenge() {
         budgetInr: challenge.pilotBudgetInr || 1500000,
       });
       toast.success('AI successfully drafted the challenge!');
-    } catch (error) {
-      toast.error('Failed to generate challenge. Please try again.');
+    } catch (error: any) {
+      if (error.response?.status === 406) {
+        toast.error(error.response.data.message || 'Bias detected in your challenge text.', { duration: 8000 });
+      } else {
+        toast.error('Failed to generate challenge. Please try again.');
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -106,6 +111,26 @@ export default function PostChallenge() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent resize-none disabled:bg-gray-50 disabled:cursor-not-allowed"
                 placeholder="Example: We need a system to detect potholes and road anomalies in real-time using drone camera footage across national highways..."
               />
+
+              <div className="mt-4">
+                <label htmlFor="budget" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Allocated Pilot Budget (INR)
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-gray-500 sm:text-sm">₹</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="budget"
+                    value={pilotBudget}
+                    onChange={(e) => setPilotBudget(e.target.value)}
+                    disabled={isGenerating || isPublishing}
+                    className="pl-7 block w-full px-4 py-3 border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent disabled:bg-gray-50 disabled:cursor-not-allowed"
+                    placeholder="1500000"
+                  />
+                </div>
+              </div>
 
               <div className="flex justify-between items-center mt-4">
                 <p className="text-xs text-gray-400">{rawText.length} characters</p>
