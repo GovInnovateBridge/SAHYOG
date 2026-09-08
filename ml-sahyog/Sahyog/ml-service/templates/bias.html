@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project Sahyog — Anti-Bias Filter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ECEEF0;
+    --paper-raised: #F6F7F8;
+    --ink: #1C2430;
+    --ink-muted: #5B6472;
+    --navy: #012348;
+    --navy-dark: #011A36;
+    --saffron: #F3AE39;
+    --amber: #B45309;
+    --amber-bg: #FBEBD9;
+    --green: #166534;
+    --green-bg: #E7F5EC;
+    --red: #B42318;
+    --red-bg: #FBE9E7;
+    --line: #C9CDD3;
+    --line-soft: #DBDEE2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+
+  header {
+    border-top: 3px solid var(--saffron);
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-raised);
+  }
+
+  .header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .brand-sub {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+
+  .gov-credential {
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .brand-row { display: flex; align-items: baseline; gap: 10px; }
+
+  .brand-marathi {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+  }
+
+  footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 32px 40px;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+
+  nav { display: flex; gap: 20px; font-size: 0.85rem; }
+  nav a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--navy);
+    padding-bottom: 2px;
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .panel {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  h2.form-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.3rem;
+    margin: 0 0 4px;
+    color: var(--navy-dark);
+  }
+
+  .form-desc {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    margin: 0 0 22px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  textarea:focus {
+    outline: 2px solid var(--navy);
+    outline-offset: 1px;
+  }
+
+  .screen-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 3px;
+    background: var(--navy);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+  }
+  .screen-btn:hover { background: var(--navy-dark); }
+  .screen-btn:disabled { background: var(--ink-muted); cursor: not-allowed; }
+
+  .hint { margin-top: 14px; font-size: 0.82rem; color: var(--ink-muted); }
+
+  .results { margin-top: 28px; }
+
+  .verdict-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .verdict-banner.clean {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid rgba(22,101,52,0.25);
+  }
+  .verdict-banner.flagged {
+    background: var(--amber-bg);
+    color: var(--amber);
+    border: 1px solid rgba(180,83,9,0.25);
+  }
+  .verdict-icon { font-size: 1.3rem; }
+  .verdict-text { font-size: 0.95rem; }
+
+  .assessment {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin: -8px 0 20px;
+    font-style: italic;
+  }
+
+  .flag-card {
+    background: white;
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--red);
+    border-radius: 3px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+
+  .flag-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .flag-phrase {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .flag-phrase::before,
+  .flag-phrase::after { content: '"'; color: var(--ink-muted); }
+
+  .category-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid rgba(180,35,24,0.2);
+    white-space: nowrap;
+  }
+
+  .flag-reason {
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+
+  .flag-rewrite {
+    background: var(--green-bg);
+    border: 1px solid rgba(22,101,52,0.2);
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+  .flag-rewrite .label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--green);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .flag-rewrite .text { color: var(--ink); }
+
+  .error-box {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: var(--red-bg);
+    border: 1px solid #E5B5AC;
+    border-radius: 3px;
+    color: #8C2F1F;
+    font-size: 0.92rem;
+  }
+
+  .loading-box {
+    margin-top: 20px;
+    padding: 40px;
+    text-align: center;
+    color: var(--ink-muted);
+  }
+</style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="gov-credential">Government of Maharashtra · Maharashtra State Innovation Society (MSInS)</div>
+        <div class="brand-row">
+          <div class="brand">Project Sahyog</div>
+          <div class="brand-marathi">प्रकल्प सहयोग</div>
+        </div>
+        <div class="brand-sub">Anti-Bias Filter — screens draft challenges for restrictive or vendor-locked language</div>
+      </div>
+      <nav>
+        <a href="/">← Challenge Formulator</a>
+        <a href="/match">Startup Matching →</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <h2 class="form-title">Screen a draft challenge</h2>
+      <p class="form-desc">Paste a challenge's title, problem statement, and KPIs. The filter flags brand names, disproportionate eligibility bars, and non-outcome-based specs that would restrict fair competition — then suggests an outcome-based rewrite for each.</p>
+
+      <textarea id="challengeText" placeholder="Example: Vendor must deploy the solution for Pune Municipal Corporation on HP servers and have a minimum annual turnover of ₹50 Crore, with at least 10 years of experience in government projects. Must use blockchain for record-keeping."></textarea>
+
+      <button class="screen-btn" id="screenBtn" onclick="runScreen()">Screen for bias</button>
+      <p class="hint">This is a standalone test view — in production this runs automatically before a challenge is published.</p>
+
+      <div class="results" id="resultsArea"></div>
+    </div>
+  </main>
+
+  <footer>Built for the Government of Maharashtra — Department of Skills, Employment, Entrepreneurship and Innovation (MSInS), under Problem Statement 26136.</footer>
+
+<script>
+async function runScreen() {
+  const challengeText = document.getElementById("challengeText").value.trim();
+  const btn = document.getElementById("screenBtn");
+  const resultsArea = document.getElementById("resultsArea");
+
+  if (challengeText.length < 10) {
+    alert("Please paste more of the challenge text (at least 10 characters).");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Screening…";
+  resultsArea.innerHTML = '<div class="loading-box">Checking for restrictive or biased language…</div>';
+
+  try {
+    const response = await fetch("/screen-bias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ challenge_text: challengeText })
+    });
+
+    const data = await response.json();
+
+    // 406 means "flagged, blocked from publishing" — an expected outcome
+    // here, not a failed request. The body still has the full breakdown.
+    if (!response.ok && response.status !== 406) {
+      throw new Error(data.detail || "Something went wrong.");
+    }
+
+    renderResults(data);
+  } catch (error) {
+    resultsArea.innerHTML = '<div class="error-box"><strong>Could not screen this draft.</strong><br>' + escapeHtml(error.message) + '</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Screen for bias";
+  }
+}
+
+function renderResults(data) {
+  const resultsArea = document.getElementById("resultsArea");
+  const flags = data.flags || [];
+
+  const banner = data.is_clean
+    ? `<div class="verdict-banner clean"><span class="verdict-icon">✓</span><span class="verdict-text">No restrictive or biased language found — this draft looks outcome-based and fair.</span></div>`
+    : `<div class="verdict-banner flagged"><span class="verdict-icon">⚑</span><span class="verdict-text">${flags.length} issue${flags.length === 1 ? '' : 's'} found that could restrict fair competition.</span></div>`;
+
+  const assessment = data.overall_assessment
+    ? `<p class="assessment">${escapeHtml(data.overall_assessment)}</p>`
+    : "";
+
+  const flagCards = flags.map(f => `
+    <div class="flag-card">
+      <div class="flag-head">
+        <span class="flag-phrase">${escapeHtml(f.phrase)}</span>
+        <span class="category-badge">${escapeHtml(formatCategory(f.category))}</span>
+      </div>
+      <div class="flag-reason">${escapeHtml(f.reason)}</div>
+      <div class="flag-rewrite">
+        <span class="label">Suggested outcome-based rewrite</span>
+        <span class="text">${escapeHtml(f.suggested_rewrite)}</span>
+      </div>
+    </div>
+  `).join("");
+
+  resultsArea.innerHTML = banner + assessment + flagCards;
+}
+
+function formatCategory(category) {
+  const labels = {
+    brand_name: "Brand name",
+    disproportionate_eligibility: "Disproportionate eligibility",
+    non_outcome_based: "Non-outcome-based"
+  };
+  return labels[category] || category;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>

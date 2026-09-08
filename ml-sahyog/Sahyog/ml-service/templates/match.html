@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project Sahyog — Startup Matching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ECEEF0;
+    --paper-raised: #F6F7F8;
+    --ink: #1C2430;
+    --ink-muted: #5B6472;
+    --navy: #012348;
+    --navy-dark: #011A36;
+    --saffron: #F3AE39;
+    --amber: #B45309;
+    --amber-bg: #FBEBD9;
+    --green: #166534;
+    --green-bg: #E7F5EC;
+    --line: #C9CDD3;
+    --line-soft: #DBDEE2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+
+  header {
+    border-top: 3px solid var(--saffron);
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-raised);
+  }
+
+  .header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--navy-dark);
+  }
+
+  .brand-sub {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+
+  .gov-credential {
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .brand-row { display: flex; align-items: baseline; gap: 10px; }
+
+  .brand-marathi {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+  }
+
+  footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 32px 40px;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+
+  nav a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--navy);
+    padding-bottom: 2px;
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .panel {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  h2.form-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.3rem;
+    margin: 0 0 4px;
+    color: var(--navy-dark);
+  }
+
+  .form-desc {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    margin: 0 0 22px;
+  }
+
+  .field-block { margin-bottom: 18px; }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+
+  textarea, input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  textarea { min-height: 80px; resize: vertical; }
+
+  textarea:focus, input:focus {
+    outline: 2px solid var(--navy);
+    outline-offset: 1px;
+  }
+
+  .startup-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: start;
+  }
+  @media (max-width: 700px) {
+    .startup-row { grid-template-columns: 1fr; }
+  }
+
+  .startup-row input[type="text"] { font-size: 0.9rem; }
+
+  .remove-btn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-muted);
+    border-radius: 3px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .remove-btn:hover { background: #FBE9E7; border-color: #E5B5AC; color: #8C2F1F; }
+
+  .add-btn {
+    background: none;
+    border: 1px dashed var(--line);
+    color: var(--navy);
+    border-radius: 3px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    width: 100%;
+  }
+  .add-btn:hover { background: var(--paper); }
+
+  .generate-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 3px;
+    background: var(--navy);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+  }
+  .generate-btn:hover { background: var(--navy-dark); }
+  .generate-btn:disabled { background: var(--ink-muted); cursor: not-allowed; }
+
+  .results { margin-top: 28px; }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--line-soft);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+
+  .result-id {
+    font-weight: 600;
+    min-width: 90px;
+    font-size: 0.9rem;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--line-soft);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    background: var(--ink-muted);
+    transition: width 0.4s ease;
+  }
+  .bar-fill.is-match { background: var(--green); }
+
+  .result-score {
+    min-width: 60px;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .match-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    min-width: 78px;
+    text-align: center;
+  }
+  .match-badge.yes { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,101,52,0.25); }
+  .match-badge.no { background: var(--paper); color: var(--ink-muted); border: 1px solid var(--line); }
+
+  .error-box {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: #FBE9E7;
+    border: 1px solid #E5B5AC;
+    border-radius: 3px;
+    color: #8C2F1F;
+    font-size: 0.92rem;
+  }
+
+  .hint { margin-top: 14px; font-size: 0.82rem; color: var(--ink-muted); }
+
+  .suggested-panel {
+    margin-top: 24px;
+    padding: 22px 24px;
+    background: var(--green-bg);
+    border: 1px solid rgba(22,101,52,0.25);
+    border-radius: 4px;
+  }
+  .suggested-panel.empty {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+  }
+  .suggested-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.05rem;
+    color: var(--green);
+    margin: 0 0 4px;
+  }
+  .suggested-panel.empty .suggested-title { color: var(--ink-muted); }
+  .suggested-desc {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin: 0 0 14px;
+  }
+  .suggested-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid rgba(22,101,52,0.2);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .suggested-rank {
+    font-weight: 700;
+    color: var(--green);
+    min-width: 22px;
+  }
+  .suggested-name { font-weight: 600; flex: 1; }
+  .suggested-score { font-weight: 700; color: var(--green); }
+</style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="gov-credential">Government of Maharashtra · Maharashtra State Innovation Society (MSInS)</div>
+        <div class="brand-row">
+          <div class="brand">Project Sahyog</div>
+          <div class="brand-marathi">प्रकल्प सहयोग</div>
+        </div>
+        <div class="brand-sub">Startup Matching — semantic similarity between challenges and startups</div>
+      </div>
+      <nav style="display: flex; gap: 20px;">
+        <a href="/">← Challenge Formulator</a>
+        <a href="/bias">Anti-Bias Filter →</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <h2 class="form-title">Compare a challenge against candidate startups</h2>
+      <p class="form-desc">Describe the challenge, then list startup profiles to score against it. Scores are based on meaning, not keyword overlap.</p>
+
+      <div class="field-block">
+        <label for="challengeText">Challenge description (title + KPIs + problem statement)</label>
+        <textarea id="challengeText" placeholder="Example: Detect road anomalies and potholes in Pune using drone footage, with real-time alerts to municipal repair crews."></textarea>
+      </div>
+
+      <div class="field-block">
+        <label>Candidate startups</label>
+        <div id="startupList"></div>
+        <button class="add-btn" onclick="addStartupRow()">+ Add another startup</button>
+      </div>
+
+      <button class="generate-btn" id="matchBtn" onclick="runMatch()">Run matching</button>
+      <p class="hint">Results are sorted best-match first. This is a standalone test view — in production, Node.js sends this same request automatically.</p>
+
+      <div class="results" id="resultsArea"></div>
+      <div id="suggestedArea"></div>
+    </div>
+  </main>
+
+  <footer>Built for the Government of Maharashtra — Department of Skills, Employment, Entrepreneurship and Innovation (MSInS), under Problem Statement 26136.</footer>
+
+<script>
+let rowCount = 0;
+
+function addStartupRow(idValue, textValue) {
+  rowCount++;
+  const list = document.getElementById("startupList");
+  const row = document.createElement("div");
+  row.className = "startup-row";
+  row.innerHTML = `
+    <input type="text" placeholder="Startup ID" value="${idValue || ('startup-' + rowCount)}" class="startup-id">
+    <input type="text" placeholder="What does this startup do?" value="${textValue || ''}" class="startup-text">
+    <button class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  list.appendChild(row);
+}
+
+// Seed with two example rows on load
+addStartupRow("startup-1", "AI computer vision platform for detecting potholes and road damage from municipal CCTV and drone footage — piloted with Pune Municipal Corporation");
+addStartupRow("startup-2", "Cloud-based accounting and GST invoicing software for small businesses");
+
+async function runMatch() {
+  const challengeText = document.getElementById("challengeText").value.trim();
+  const btn = document.getElementById("matchBtn");
+  const resultsArea = document.getElementById("resultsArea");
+
+  const rows = document.querySelectorAll(".startup-row");
+  const startups = Array.from(rows).map(row => ({
+    id: row.querySelector(".startup-id").value.trim(),
+    profile_text: row.querySelector(".startup-text").value.trim()
+  })).filter(s => s.id && s.profile_text);
+
+  if (challengeText.length < 5) {
+    alert("Please describe the challenge in a bit more detail.");
+    return;
+  }
+  if (startups.length === 0) {
+    alert("Add at least one startup with an ID and description.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Matching…";
+  resultsArea.innerHTML = "";
+
+  try {
+    const response = await fetch("/match-startups", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ challenge_text: challengeText, startups })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Something went wrong.");
+    }
+
+    renderResults(data.results);
+    renderSuggested(data.results);
+  } catch (error) {
+    resultsArea.innerHTML = '<div class="error-box"><strong>Could not run matching.</strong><br>' + escapeHtml(error.message) + '</div>';
+    document.getElementById("suggestedArea").innerHTML = "";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Run matching";
+  }
+}
+
+function renderResults(results) {
+  const resultsArea = document.getElementById("resultsArea");
+  resultsArea.innerHTML = results.map(r => `
+    <div class="result-row">
+      <div class="result-id">${escapeHtml(r.id)}</div>
+      <div class="bar-track"><div class="bar-fill ${r.is_match ? 'is-match' : ''}" style="width: ${Math.max(r.match_percentage, 2)}%;"></div></div>
+      <div class="result-score">${r.match_percentage.toFixed(1)}%</div>
+      <div class="match-badge ${r.is_match ? 'yes' : 'no'}">${r.is_match ? 'Match' : 'No match'}</div>
+    </div>
+  `).join("");
+}
+
+function renderSuggested(results) {
+  const suggestedArea = document.getElementById("suggestedArea");
+  // results already comes back sorted best-first from the backend, so
+  // filtering preserves that order — no re-sort needed here.
+  const matches = results.filter(r => r.is_match);
+
+  if (matches.length === 0) {
+    suggestedArea.innerHTML = `
+      <div class="suggested-panel empty">
+        <h3 class="suggested-title">No strong matches found</h3>
+        <p class="suggested-desc">None of the listed startups crossed the match threshold for this challenge. Consider widening the candidate pool or rephrasing the challenge description.</p>
+      </div>`;
+    return;
+  }
+
+  suggestedArea.innerHTML = `
+    <div class="suggested-panel">
+      <h3 class="suggested-title">Suggested matches</h3>
+      <p class="suggested-desc">Startups that crossed the match threshold, best fit first.</p>
+      ${matches.map((r, i) => `
+        <div class="suggested-row">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="suggested-rank">#${i + 1}</span>
+            <span class="suggested-name">${escapeHtml(r.id)}</span>
+          </div>
+          <span class="suggested-score">${r.match_percentage.toFixed(1)}%</span>
+        </div>
+      `).join("")}
+    </div>`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>
