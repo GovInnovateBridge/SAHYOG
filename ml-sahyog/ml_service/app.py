@@ -31,6 +31,7 @@ from trl_engine.hardware_verifier import router as hardware_router
 from api.matchmaking import router as matchmaking_router
 from api.sandbox import router as sandbox_router
 from api.redaction import router as redaction_router
+from api.formulate import router as formulate_router
 
 # ── FastAPI App ──────────────────────────────
 app = FastAPI(
@@ -49,6 +50,7 @@ app.include_router(hardware_router)
 app.include_router(matchmaking_router, tags=["S1 Semantic Triage"])
 app.include_router(sandbox_router, tags=["S2 API Sandbox"])
 app.include_router(redaction_router, tags=["S3 Double-Blind QCBS"])
+app.include_router(formulate_router, tags=["Challenge Formulator"])
 
 # ── Request/Response Models ──────────────────
 
